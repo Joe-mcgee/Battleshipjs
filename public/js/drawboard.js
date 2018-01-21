@@ -9,8 +9,49 @@ function drawBoard() {
     var cell = width / 11;
     var string = 'repeat(11, ' + cell + 'px)'
     return string
-  })
-  console.log(board)
+  });
+  xaxis(board);
+  yaxis(board)
+
+
   return board;
 }
 
+
+function xaxis(board) {
+  let letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
+  letters.forEach(function (letter, i) {
+    var letterdiv = $('<div/>', {
+      'id': letter
+    });
+    var letterNode = document.createTextNode(letter);
+    $(letterdiv).append(letterNode);
+    $(letterdiv).css({'height': '100%', 'width': '100%', 'display': 'flex', 'justify-content': 'center', 'align-items': 'center', 'grid-row': '1'});
+    $(letterdiv).css('grid-column', function () {
+      var column = (i + 2).toString();
+      console.log(column)
+      return column;
+    });
+    $(board).append(letterdiv)
+
+  });
+}
+
+function yaxis(board) {
+  let letters = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
+  letters.forEach(function (number, i) {
+    var numberdiv = $('<div/>', {
+      'id': number
+    });
+    var numberNode = document.createTextNode(number);
+    $(numberdiv).append(numberNode);
+    $(numberdiv).css({'height': '100%', 'width': '100%', 'display': 'flex', 'justify-content': 'center', 'align-items': 'center', 'grid-column': '1'});
+    $(numberdiv).css('grid-row', function () {
+      var row = (i + 2).toString();
+      console.log(row)
+      return row;
+    });
+    $(board).append(numberdiv)
+
+  });
+}
