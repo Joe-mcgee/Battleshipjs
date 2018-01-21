@@ -1,5 +1,7 @@
-function xaxis(board) {
-  let letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
+const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
+const numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
+
+function xaxis(board, letters) {
   letters.forEach(function(letter, i) {
     var letterdiv = $('<div/>', {
       'class': letter
@@ -17,15 +19,15 @@ function xaxis(board) {
   });
 }
 
-function yaxis(board) {
-  let letters = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
-  letters.forEach(function(number, i) {
+function yaxis(board, numbers) {
+
+  numbers.forEach(function(number, i) {
     var numberdiv = $('<div/>', {
       'class': number
     });
     var numberNode = document.createTextNode(number);
     $(numberdiv).append(numberNode);
-    $(numberdiv).css({ 'height': '100%', 'width': '100%', 'display': 'flex', 'justify-content': 'center', 'align-items': 'center', 'grid-column': '1', 'border-bottom': '1px solid black', 'border-right': '1px solid black'});
+    $(numberdiv).css({ 'height': '100%', 'width': '100%', 'display': 'flex', 'justify-content': 'center', 'align-items': 'center', 'grid-column': '1', 'border-bottom': '1px solid black', 'border-right': '1px solid black' });
     $(numberdiv).css('grid-row', function() {
       var row = (i + 2).toString();
       console.log(row);
@@ -35,14 +37,40 @@ function yaxis(board) {
 
   });
 }
+
 function origin(board) {
   var origin = $('<div/>', {
     'class': 'origin'
   });
-  $(origin).css({'height': '100%', 'width': '100%', 'border-right': '1px solid black', 'border-bottom': '1px solid black', 'grid-row': '1', 'grid-column': '1'});
-  $(board).append(origin)
+  $(origin).css({ 'height': '100%', 'width': '100%', 'border-right': '1px solid black', 'border-bottom': '1px solid black', 'grid-row': '1', 'grid-column': '1' });
+  $(board).append(origin);
 }
 
+
+function drawGrid(board, numbers, letters) {
+  numbersArray = numbers.map(Number);
+  numbersArray.forEach(function(x) {
+    numbersArray.forEach(function(y) {
+      var reference = [x, y];
+      var cell = $('<div/>', {
+        'class': x + '-' + letters[y - 1]
+      });
+      $(cell).css({ 'height': '100%', 'width': '100%', 'display': 'flex', 'justify-content': 'center', 'align-items': 'center', 'border-bottom': '1px solid black', 'border-right': '1px solid black' });
+      $(cell).css('grid-column', function() {
+        var column = (y + 1).toString();
+        console.log(column);
+        return column;
+      });
+
+      $(cell).css('grid-row', function() {
+        var row = (x + 1).toString();
+        console.log(row);
+        return row;
+      });
+      $(board).append(cell);
+    });
+  });
+}
 
 
 
@@ -58,9 +86,10 @@ function drawBoard() {
     var string = 'repeat(11, ' + cell + 'px)';
     return string;
   });
-  origin(board)
-  xaxis(board);
-  yaxis(board);
+  origin(board);
+  xaxis(board, letters);
+  yaxis(board, numbers)
+  drawGrid(board, numbers, letters);
 
 
   return board;
