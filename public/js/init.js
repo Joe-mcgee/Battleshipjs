@@ -14,7 +14,6 @@ $(document).ready(function() {
   $(newButton).css({ 'grid-row': '1', 'height': '100%', 'width': '100%', 'display': 'flex', 'align-items': 'center', 'justify-content': 'center' });
   newButton.append(document.createTextNode('New Game'));
   newGame.append(newButton);
-
   $('.main-box').append(newGame);
 
   let options = $('<div/>', {
