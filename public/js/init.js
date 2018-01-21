@@ -1,12 +1,14 @@
 $(document).ready(function() {
   let newGame = $('<form/>', {
     'id': 'newGame',
-    'action':'/new'
+    'action':'/new',
+    'method': 'post'
   });
   $(newGame).css({'display': 'grid', 'grid-template-rows': '1fr 1fr'})
 
-  let newButton = $('<button/>', {
-    'id': 'new'
+  let newButton = $('<input/>', {
+    'id': 'new',
+    'type': 'submit'
   })
 
   $(newButton).css({ 'grid-row': '1', 'height': '100%', 'width': '100%', 'display': 'flex', 'align-items': 'center', 'justify-content': 'center' });
@@ -30,11 +32,11 @@ $(document).ready(function() {
   let two = $('<option/>', {
     'value': 'Two Player'
   });
-  two.append(document.createTextNode('2P single Computer'));
+  two.append(document.createTextNode('Two Player Local'));
   let remote = $('<option/>', {
     'value': 'Remote'
   });
-  remote.append(document.createTextNode('2P two Computer'));
+  remote.append(document.createTextNode('Two Player Remote'));
   $(players).append(single)
   $(players).append(two);
   $(players).append(remote)
