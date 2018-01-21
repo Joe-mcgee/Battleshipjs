@@ -1,6 +1,7 @@
 $(document).ready(function() {
-  let newGame = $('<div/>', {
-    'id': 'newGame'
+  let newGame = $('<form/>', {
+    'id': 'newGame',
+    'action':'/new'
   });
   $(newGame).css({'display': 'grid', 'grid-template-rows': '1fr 1fr'})
 
@@ -41,7 +42,6 @@ $(document).ready(function() {
   $(newGame).append(options)
 
   $(newButton).css({ 'grid-row': '1', 'height': '100%', 'width': '100%', 'display': 'flex', 'align-items': 'center', 'justify-content': 'center' });
-  newButton.append(document.createTextNode('New Game'))
   newGame.append(newButton);
 
   $('.main-box').append(newGame);
