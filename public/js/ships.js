@@ -53,8 +53,23 @@ function allocShips() {
     let image = $('<div/>', {
       'id': ship.type
     });
+    $(image).css({'background-color': 'white', 'display': 'grid'});
+    $(image).css('grid-template-columns', function() {
+      var string = 'repeat(' + ship.size + ', 1fr)';
+      return string
+    })
 
-    $(image).css({'background-color': 'white'})
+    for (var i = 0; i < ship.size; i++) {
+      let databox = $('<div/>', {
+        'class': 'xy'
+      });
+      $(databox).css({'height': '100%', 'width':'100%', 'border-right': '1px solid black'});
+      $(databox).css('grid-column', function() {
+        return i+1;
+      });
+      $(image).append(databox)
+    }
+
     $(image).css('grid-row', function () {
       return iter
     })
