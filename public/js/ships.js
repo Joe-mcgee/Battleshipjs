@@ -1,20 +1,24 @@
 // functions for ships
 // defines length of cell
-function cell() {
-  var width = $(window).width() / 2;
-  var cell = width / 11;
-  return cell;
-}
+function celldim() {
+    var width = $(window).width() / 2;
+    var cell = width / 11;
+    return cell;
+  };
 
-function Ship (type, size) {
+
+
+
+
+function Ship(type, size) {
   this.type = type;
   this.size = size;
   this.health = size;
   this.location = [];
   this.orientation = 'H';
-};
+}
 
-var carrier = new Ship('Carrier', 5)
+var carrier = new Ship('Carrier', 5);
 var battleship = new Ship('Battleship', 4);
 var cruiser = new Ship('Cruiser', 3);
 var submarine = new Ship('Submarine', 3);
@@ -40,55 +44,69 @@ function allocShips() {
   });
   $(instrutTitle).append(document.createTextNode('Please deploy your fleet, Player 1'));
   $(instructions).append(instrutTitle);
-  $(instructions).css({'grid-row': '1', 'height': '100%', 'width': '100%', 'display': 'flex', 'justify-content': 'center', 'align-items': 'center' });
-  $(shipYard).append(instructions)
+  $(instructions).css({ 'grid-row': '1', 'height': '100%', 'width': '100%', 'display': 'flex', 'justify-content': 'center', 'align-items': 'center' });
+  $(shipYard).append(instructions);
 
   //ships
   let yard = $('<div/>', {
     'id': 'yard'
   });
-  $(yard).css({'grid-row': '2', 'display': 'grid', 'grid-template-rows': 'repeat(5, 1fr)'})
-  var iter = 0
+  $(yard).css({ 'grid-row': '2', 'display': 'grid'});
+  $(yard).css('grid-row-gap', function() {
+    return celldim();
+  })
+  $(yard).css('grid-template-rows', function() {
+    var string = 'repeat(' + fleet.length + ', ' + celldim() +'px)'
+    return string
+  })
+  var iter = 0;
   for (ship of fleet) {
     let image = $('<div/>', {
-      'id': ship.type
+      'id': ship.type,
+      'class': 'ship'
     });
-    $(image).css({'background-color': 'white', 'display': 'grid'});
+
+    $(image).draggable({
+      grid: [celldim(), celldim()]
+
+    });
+
+
+
+    $(image).css({ 'background-color': 'white', 'display': 'grid' });
     $(image).css('grid-template-columns', function() {
       var string = 'repeat(' + ship.size + ', 1fr)';
-      return string
-    })
+      return string;
+    });
 
     for (var i = 0; i < ship.size; i++) {
       let databox = $('<div/>', {
         'class': 'xy'
       });
-      $(databox).css({'height': '100%', 'width':'100%', 'border-right': '1px solid black'});
+      $(databox).css({ 'height': '100%', 'width': '100%', 'border-right': '1px solid black' });
       $(databox).css('grid-column', function() {
-        return i+1;
+        return i + 1;
       });
-      $(image).append(databox)
+      $(image).append(databox);
     }
 
-    $(image).css('grid-row', function () {
-      return iter
-    })
+    $(image).css('grid-row', function() {
+      return iter;
+    });
     $(image).css('width', function() {
-      console.log(cell() * ship.size)
-      return cell() * ship.size;
+      return celldim() * ship.size;
     });
     $(image).css('height', function() {
-      return cell();
+      return celldim();
     });
     ship['image'] = image;
-    $(yard).append(image)
+    $(yard).append(image);
     $(shipYard).append(yard);
-    iter ++
+    iter++;
   }
-
-
-
 
   return shipYard;
 }
+
+
 

@@ -53,6 +53,14 @@ function drawGrid(board, numbers, letters) {
       var cell = $('<div/>', {
         'class': x + '-' + letters[y - 1]
       });
+      $(cell).droppable({
+
+        drop: function (event, ui) {
+        if (!ui.draggable.hasClass('ui-draggable')) return
+        $(this).append("<div>Test</div>");
+    }
+
+      });
       $(cell).css({ 'height': '100%', 'width': '100%', 'display': 'flex', 'justify-content': 'center', 'align-items': 'center', 'border-bottom': '1px solid black', 'border-right': '1px solid black' });
       $(cell).css('grid-column', function() {
         var column = (y + 1).toString();
@@ -74,7 +82,14 @@ function drawBoard() {
   var board = $('<div/>', {
     'class': 'board'
   });
-  $(board).css({ 'display': 'grid', 'grid-template-columns': 'repeat(11, 1fr)' });
+  $(board).css({ 'display': 'grid'});
+  $(board).css('grid-template-columns', function () {
+    var height = $(window).width() / 2;
+    var cell = height / 11;
+    var string = 'repeat(11, ' + cell + 'px)';
+    console.log(string)
+    return string;
+  });
   $(board).css('grid-template-rows', function() {
     var width = $(window).width() / 2;
     var cell = width / 11;
