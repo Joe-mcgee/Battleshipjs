@@ -1,7 +1,7 @@
 // functions for ships
 // defines length of cell
 function cell() {
-  var width = $(window).width();
+  var width = $(window).width() / 2;
   var cell = width / 11;
   return cell;
 }
@@ -47,9 +47,28 @@ function allocShips() {
   let yard = $('<div/>', {
     'id': 'yard'
   });
-
+  $(yard).css({'grid-row': '2', 'display': 'grid', 'grid-template-rows': 'repeat(5, 1fr)'})
+  var iter = 0
   for (ship of fleet) {
-    console.log(ship)
+    let image = $('<div/>', {
+      'id': ship.type
+    });
+
+    $(image).css({'background-color': 'white'})
+    $(image).css('grid-row', function () {
+      return iter
+    })
+    $(image).css('width', function() {
+      console.log(cell() * ship.size)
+      return cell() * ship.size;
+    });
+    $(image).css('height', function() {
+      return cell();
+    });
+    ship['image'] = image;
+    $(yard).append(image)
+    $(shipYard).append(yard);
+    iter ++
   }
 
 
