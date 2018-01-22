@@ -56,7 +56,7 @@ function drawGrid(board, numbers, letters) {
       $(cell).droppable({
 
         drop: function (event, ui) {
-        if (!ui.draggable.hasClass('ui-draggable')) return
+        if (!ui.draggable.hasClass('ui-draggable')) return;
         $(this).append("<div>Test</div>");
     }
 

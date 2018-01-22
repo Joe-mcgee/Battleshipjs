@@ -66,8 +66,9 @@ function allocShips() {
 
     $(image).draggable({
       grid: [celldim(), celldim()]
-
     });
+
+
 
     $(image).css({ 'background-color': 'white', 'display': 'grid' });
     $(image).css('grid-template-columns', function() {
@@ -89,19 +90,29 @@ function allocShips() {
     $(image).css('grid-row', function() {
       return iter[j];
     });
-    $(image).css('grid-column', function() {
+    /*$(image).css('grid-column', function() {
       if ((j + 1) % 2 === 0) {
         return '2';
       } else {
         return '1';
       }
-    });
+    });*/
     $(image).css('width', function() {
       return celldim() * ship.size;
     });
     $(image).css('height', function() {
       return celldim();
     });
+    $(image).click(function() {
+
+      let oldRow = $(image).css('grid-template-rows');
+      let oldCol = $(image).css('grid-template-columns');
+      $(image).css({'grid-template-rows': oldCol, 'grid-template-columns': oldRow, 'background-color': 'white' });
+      /*$(image).draggable({
+      grid: [celldim(), celldim()]
+    });*/
+    });
+
     ship['image'] = image;
     $(yard).append(image);
     $(shipYard).append(yard);

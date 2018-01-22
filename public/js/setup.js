@@ -3,8 +3,9 @@ $(document).ready( function () {
 });
 
 $(document).ready( function () {
-  $('.main-box').append(allocShips())
-})
+  $('.main-box').append(allocShips());
+});
+
 
 
 
