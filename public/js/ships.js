@@ -1,13 +1,10 @@
 // functions for ships
 // defines length of cell
 function celldim() {
-    var width = $(window).width() / 2;
-    var cell = width / 11;
-    return cell;
-  };
-
-
-
+  var width = $(window).width() / 2;
+  var cell = width / 11;
+  return cell;
+}
 
 
 function Ship(type, size) {
@@ -34,7 +31,7 @@ function allocShips() {
     'id': 'shipyard'
   });
 
-  $(shipYard).css({ 'grid-column': '2', 'width': '100%', 'height': '100%', 'display': 'grid', 'grid-template-rows': '0.5fr 1fr' });
+  $(shipYard).css({ 'grid-column': '2', 'width': '100%', 'height': '100%', 'display': 'grid', 'grid-template-rows': '1fr 1fr', 'grid-template-columns': '2' });
   //nest for instruction for player
   let instructions = $('<div/>', {
     'id': 'instructions'
@@ -44,22 +41,23 @@ function allocShips() {
   });
   $(instrutTitle).append(document.createTextNode('Please deploy your fleet, Player 1'));
   $(instructions).append(instrutTitle);
-  $(instructions).css({ 'grid-row': '1', 'height': '100%', 'width': '100%', 'display': 'flex', 'justify-content': 'center', 'align-items': 'center' });
+  $(instructions).css({ 'grid-row': '2', 'grid-column': '1/2', 'height': '100%', 'width': '100%', 'display': 'flex', 'justify-content': 'center', 'align-items': 'center' });
   $(shipYard).append(instructions);
 
   //ships
   let yard = $('<div/>', {
     'id': 'yard'
   });
-  $(yard).css({ 'grid-row': '2', 'display': 'grid'});
+  $(yard).css({ 'grid-row': '1', 'grid-template-columns': '1fr 1fr', 'display': 'grid'});
   $(yard).css('grid-row-gap', function() {
     return celldim();
-  })
+  });
   $(yard).css('grid-template-rows', function() {
-    var string = 'repeat(' + fleet.length + ', ' + celldim() +'px)'
-    return string
-  })
-  var iter = 0;
+    var string = 'repeat(' + Math.ceil(fleet.length / 2) + ', ' + celldim() + 'px)';
+    return string;
+  });
+  let iter = [1, 1, 2, 2, 3];
+  let j = 0;
   for (ship of fleet) {
     let image = $('<div/>', {
       'id': ship.type,
@@ -70,8 +68,6 @@ function allocShips() {
       grid: [celldim(), celldim()]
 
     });
-
-
 
     $(image).css({ 'background-color': 'white', 'display': 'grid' });
     $(image).css('grid-template-columns', function() {
@@ -91,7 +87,14 @@ function allocShips() {
     }
 
     $(image).css('grid-row', function() {
-      return iter;
+      return iter[j];
+    });
+    $(image).css('grid-column', function() {
+      if ((j + 1) % 2 === 0) {
+        return '2';
+      } else {
+        return '1';
+      }
     });
     $(image).css('width', function() {
       return celldim() * ship.size;
@@ -102,7 +105,7 @@ function allocShips() {
     ship['image'] = image;
     $(yard).append(image);
     $(shipYard).append(yard);
-    iter++;
+    j++;
   }
 
   return shipYard;
