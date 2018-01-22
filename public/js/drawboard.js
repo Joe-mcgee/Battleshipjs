@@ -88,7 +88,7 @@ function drawBoard() {
   });
   origin(board);
   xaxis(board, letters);
-  yaxis(board, numbers)
+  yaxis(board, numbers);
   drawGrid(board, numbers, letters);
 
 
