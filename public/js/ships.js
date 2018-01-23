@@ -48,7 +48,14 @@ function allocShips() {
   let yard = $('<div/>', {
     'id': 'yard'
   });
-  $(yard).css({ 'grid-row': '1', 'grid-template-columns': '1fr 1fr', 'display': 'grid'});
+  $(yard).css({ 'grid-row': '1', 'display': 'grid'});
+  $(yard).css('grid-template-columns', function() {
+    var length1 = celldim() * 6;
+    var length2 = celldim() * 5;
+    var string = length1 + 'px ' + length2 + 'px';
+    return string;
+  });
+
   $(yard).css('grid-row-gap', function() {
     return celldim();
   });
