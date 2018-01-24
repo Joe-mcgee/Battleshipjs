@@ -68,7 +68,7 @@ function allocShips() {
   for (ship of fleet) {
     let image = $('<div/>', {
       'id': ship.type,
-      'class': 'ship'
+      'class': 'ship ui-droppable-carrier'
     });
 
     $(image).draggable({

@@ -57,14 +57,26 @@ function drawGrid(board, numbers, letters) {
 
         drop: function (event, ui) {
         if (!ui.draggable.hasClass('ui-draggable')) return;
-        $(this).append("<div id='marked'>Test</div>")
+        /*$(this).append("<div id='marked'>Test</div>")*/
+        console.log($(this).attr('class').match(/[1-9]-[A-Z]/)[0])
+        if (ui.draggable.is('#Carrier')) {
+          var carrier = document.getElementById('Carrier');
+          var height = carrier.clientHeight;
+          var width = carrier.clientWidth;
+          if (height > width) {
+            $(this).append("<div class='Carrier-mark'>Carrier Mark</div>");
+          }
 
-      },
-
-        over: function (event, ui) {
-          $('#marked').remove()
         }
 
+
+
+      }
+
+       /* over: function (event, ui) {
+          $('#marked').remove()
+        }
+*/
 
       });
       $(cell).css({ 'height': '100%', 'width': '100%', 'display': 'flex', 'justify-content': 'center', 'align-items': 'center', 'border-bottom': '1px solid black', 'border-right': '1px solid black' });
