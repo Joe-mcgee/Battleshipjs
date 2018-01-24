@@ -58,12 +58,17 @@ function drawGrid(board, numbers, letters) {
         drop: function (event, ui) {
         if (!ui.draggable.hasClass('ui-draggable')) return;
         /*$(this).append("<div id='marked'>Test</div>")*/
-        console.log($(this).attr('class').match(/[1-9]-[A-Z]/)[0])
+
         if (ui.draggable.is('#Carrier')) {
+          let coords = $(this).attr('class').match(/([1-9]-[A-Z]|10-[A-Z])/)[0];
+          let x = coords.split('-')[1].toLowerCase().charCodeAt(0) - 96
+          let y = Number(coords.split('-')[0]);
+          console.log(x, y)
           var carrier = document.getElementById('Carrier');
           var height = carrier.clientHeight;
           var width = carrier.clientWidth;
           if (height > width) {
+
             $(this).append("<div class='Carrier-mark'>Carrier Mark</div>");
           }
 
