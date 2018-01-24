@@ -57,8 +57,14 @@ function drawGrid(board, numbers, letters) {
 
         drop: function (event, ui) {
         if (!ui.draggable.hasClass('ui-draggable')) return;
-        $(this).append("<div>Test</div>");
-    }
+        $(this).append("<div id='marked'>Test</div>")
+
+      },
+
+        over: function (event, ui) {
+          $('#marked').remove()
+        }
+
 
       });
       $(cell).css({ 'height': '100%', 'width': '100%', 'display': 'flex', 'justify-content': 'center', 'align-items': 'center', 'border-bottom': '1px solid black', 'border-right': '1px solid black' });

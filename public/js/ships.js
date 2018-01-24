@@ -87,7 +87,7 @@ function allocShips() {
       let databox = $('<div/>', {
         'class': 'xy'
       });
-      $(databox).css({ 'height': 'calc(100% - 2px)', 'width': 'calc(100% - 2px)', 'border': '1px solid black', 'background-color': 'white' });
+      $(databox).css({ 'height': 'calc(100% - 2px)', 'width': 'calc(100% - 2px)', 'border': '1px solid black', 'background-color': 'white', 'display': 'flex', 'justify-content': 'center', 'align-items':'center' });
       $(databox).css('grid-column', function() {
         return i + 1;
       });
@@ -114,7 +114,13 @@ function allocShips() {
 
       let oldRow = $(image).css('grid-template-rows');
       let oldCol = $(image).css('grid-template-columns');
-      $(image).css({'grid-template-rows': oldCol, 'grid-template-columns': oldRow });
+      let oldHeight = $(image).css('height');
+      let oldWidth = $(image).css('width');
+
+      $(image).css({'grid-template-rows': oldCol, 'grid-template-columns': oldRow, 'height': oldWidth, 'width': oldHeight });
+
+
+
       /*$(image).draggable({
       grid: [celldim(), celldim()]
     });*/
