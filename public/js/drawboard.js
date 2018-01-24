@@ -1,6 +1,24 @@
 const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
 const numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
 
+function divcoords(div) {
+  let coords = $(div).attr('class').match(/([A-Z]-[1-9]|[A-Z]-10)/)[0];
+  let x = coords.split('-')[0].toLowerCase().charCodeAt(0) - 96
+  let y = Number(coords.split('-')[1]);
+  return [x, y]
+}
+
+function coordsToDiv(coords) {
+  let x = coords[0];
+  let y = coords[1];
+  let letter = String.fromCharCode(96 + x).toUpperCase()
+  let linkToGrid = '.' + letter + '-' + y;
+  let div = $(linkToGrid)
+  return div
+}
+
+
+
 function xaxis(board, letters) {
   letters.forEach(function(letter, i) {
     var letterdiv = $('<div/>', {
@@ -47,38 +65,54 @@ function origin(board) {
 
 function drawGrid(board, numbers, letters) {
   numbersArray = numbers.map(Number);
-  numbersArray.forEach(function(x) {
-    numbersArray.forEach(function(y) {
+  numbersArray.forEach(function(y) {
+    numbersArray.forEach(function(x) {
       var reference = [x, y];
       var cell = $('<div/>', {
-        'class': x + '-' + letters[y - 1]
+        'class': letters[y - 1] + '-' + x
       });
       $(cell).droppable({
 
-        drop: function (event, ui) {
-        if (!ui.draggable.hasClass('ui-draggable')) return;
-        /*$(this).append("<div id='marked'>Test</div>")*/
+        drop: function(event, ui) {
+          if (!ui.draggable.hasClass('ui-draggable')) return;
+          /*$(this).append("<div id='marked'>Test</div>")*/
 
-        if (ui.draggable.is('#Carrier')) {
-          let coords = $(this).attr('class').match(/([1-9]-[A-Z]|10-[A-Z])/)[0];
-          let x = coords.split('-')[1].toLowerCase().charCodeAt(0) - 96
-          let y = Number(coords.split('-')[0]);
-          console.log(x, y)
-          var carrier = document.getElementById('Carrier');
-          var height = carrier.clientHeight;
-          var width = carrier.clientWidth;
-          if (height > width) {
+          if (ui.draggable.is('#Carrier')) {
+            let baseMarker = $(this)
+            let coords = divcoords(baseMarker)
 
-            $(this).append("<div class='Carrier-mark'>Carrier Mark</div>");
+            var carrier = document.getElementById('Carrier');
+            var height = carrier.clientHeight;
+            var width = carrier.clientWidth;
+            if (height > width) {
+              let x = coords[0];
+              let y = coords[1];
+
+              let location = [
+                [x, y + 1],
+                [x, y + 2],
+                coords,
+                [x, y - 1],
+                [x, y - 2]
+              ];
+              location.forEach((spot) => {
+                let spotdiv = coordsToDiv(spot);
+                $(spotdiv).append("<div class='Carrier-mark'>Carrier Mark</div>");
+              });
+              let marker = coordsToDiv(coords);
+
+
+
+              $(this).append();
+            }
+
           }
+
+
 
         }
 
-
-
-      }
-
-       /* over: function (event, ui) {
+        /* over: function (event, ui) {
           $('#marked').remove()
         }
 */
@@ -105,8 +139,8 @@ function drawBoard() {
   var board = $('<div/>', {
     'class': 'board'
   });
-  $(board).css({ 'display': 'grid'});
-  $(board).css('grid-template-columns', function () {
+  $(board).css({ 'display': 'grid' });
+  $(board).css('grid-template-columns', function() {
     var height = $(window).width() / 2;
     var cell = height / 11;
     var string = 'repeat(11, ' + cell + 'px)';
