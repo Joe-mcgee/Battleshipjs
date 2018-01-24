@@ -74,50 +74,170 @@ function drawGrid(board, numbers, letters) {
       $(cell).droppable({
 
         drop: function(event, ui) {
+
           if (!ui.draggable.hasClass('ui-draggable')) return;
           /*$(this).append("<div id='marked'>Test</div>")*/
-
+          let baseMarker;
+          let coords;
+          let height;
+          let width;
+          let x;
+          let y;
+          let location;
           if (ui.draggable.is('#Carrier')) {
-            let baseMarker = $(this)
-            let coords = divcoords(baseMarker)
-
-            var carrier = document.getElementById('Carrier');
-            var height = carrier.clientHeight;
-            var width = carrier.clientWidth;
+            baseMarker = $(this);
+            coords = divcoords(baseMarker);
+            let carrier = document.getElementById('Carrier');
+            height = carrier.clientHeight;
+            width = carrier.clientWidth;
+            x = coords[0];
+            y = coords[1];
+            location = [];
             if (height > width) {
-              let x = coords[0];
-              let y = coords[1];
-
-              let location = [
+              location = [
                 [x, y + 1],
                 [x, y + 2],
-                coords,
-                [x, y - 1],
+                coords, [x, y - 1],
                 [x, y - 2]
               ];
-              location.forEach((spot) => {
-                let spotdiv = coordsToDiv(spot);
-                $(spotdiv).append("<div class='Carrier-mark'>Carrier Mark</div>");
-              });
-              let marker = coordsToDiv(coords);
-
-
-
-              $(this).append();
+            } else {
+              location = [
+                [x + 1, y],
+                [x + 2, y],
+                coords, [x - 1, y],
+                [x - 2, y]
+              ];
             }
+            location.forEach((spot) => {
+              var spotdiv = coordsToDiv(spot);
+              $(spotdiv).append("<div class='Carrier-mark'>Carrier Mark</div>");
+            });
+          } else if (ui.draggable.is('#Battleship')) {
+            baseMarker = $(this);
+            coords = divcoords(baseMarker);
 
+            let battleship = document.getElementById('Battleship');
+            height = battleship.clientHeight;
+            width = battleship.clientWidth;
+            x = coords[0];
+            y = coords[1];
+            console.log(coords)
+            location = [];
+            if (height > width) {
+              location = [
+                coords, [x, y - 1],
+                [x, y + 2],
+                [x, y + 1]
+              ];
+            } else {
+              location = [
+                [x + 1, y],
+                [x + 2, y],
+                coords, [x - 1, y]
+              ];
+            }
+            location.forEach((spot) => {
+              let spotdiv = coordsToDiv(spot);
+              $(spotdiv).append("<div class='Battleship-mark'>Battleship Mark</div>");
+            });
+            let marker = coordsToDiv(coords);
+          } else if (ui.draggable.is('#Submarine')) {
+            baseMarker = $(this);
+            coords = divcoords(baseMarker);
+
+            let submarine = document.getElementById('Submarine');
+            height = submarine.clientHeight;
+            width = submarine.clientWidth;
+            x = coords[0];
+            y = coords[1];
+            location = [];
+            if (height > width) {
+              location = [
+                coords, [x, y - 1],
+                [x, y + 1]
+              ];
+            } else {
+              location = [
+                [x + 1, y],
+                coords, [x - 1, y]
+              ];
+            }
+            location.forEach((spot) => {
+              let spotdiv = coordsToDiv(spot);
+              $(spotdiv).append("<div class='Submarine-mark'>Submarine mark</div>");
+            });
+            let marker = coordsToDiv(coords);
+          } else if (ui.draggable.is('#Cruiser')) {
+            baseMarker = $(this);
+            coords = divcoords(baseMarker);
+
+            let cruiser = document.getElementById('Cruiser');
+            height = cruiser.clientHeight;
+            width = cruiser.clientWidth;
+            x = coords[0];
+            y = coords[1];
+            location = [];
+            if (height > width) {
+              location = [
+                coords, [x, y - 1],
+                [x, y + 1]
+              ];
+            } else {
+              location = [
+                [x + 1, y],
+                coords, [x - 1, y]
+              ];
+            }
+            location.forEach((spot) => {
+              let spotdiv = coordsToDiv(spot);
+              $(spotdiv).append("<div class='Cruiser-mark'>Cruiser mark</div>");
+            });
+            let marker = coordsToDiv(coords);
+          } else if (ui.draggable.is('#Destroyer')) {
+            baseMarker = $(this);
+            coords = divcoords(baseMarker);
+
+            let destroyer = document.getElementById('Destroyer');
+            height = destroyer.clientHeight;
+            width = destroyer.clientWidth;
+            x = coords[0];
+            y = coords[1];
+            location = [];
+            if (height > width) {
+              location = [
+                coords,
+                [x, y + 1]
+              ];
+            } else {
+              location = [
+                [x + 1, y],
+                coords
+              ];
+            }
+            location.forEach((spot) => {
+              let spotdiv = coordsToDiv(spot);
+              $(spotdiv).append("<div class='Destroyer-mark'>Destroyer mark</div>");
+            });
+            let marker = coordsToDiv(coords);
           }
 
-
-
+        },
+        over: function(event, ui) {
+          if (ui.draggable.is('#Carrier')) {
+            $('.board').find('.Carrier-mark').remove();
+          } else if (ui.draggable.is('#Battleship')) {
+            $('.board').find('.Battleship-mark').remove();
+          } else if (ui.draggable.is('#Submarine')) {
+            $('.board').find('.Submarine-mark').remove();
+          } else if (ui.draggable.is('#Cruiser')) {
+            $('.board').find('.Cruiser-mark').remove();
+          } else if (ui.draggable.is('#Destroyer')) {
+            $('.board').find('.Destroyer-mark').remove();
+          }
         }
-
-        /* over: function (event, ui) {
-          $('#marked').remove()
-        }
-*/
-
       });
+
+
       $(cell).css({ 'height': '100%', 'width': '100%', 'display': 'flex', 'justify-content': 'center', 'align-items': 'center', 'border-bottom': '1px solid black', 'border-right': '1px solid black' });
       $(cell).css('grid-column', function() {
         var column = (y + 1).toString();
@@ -135,6 +255,10 @@ function drawGrid(board, numbers, letters) {
 
 
 
+
+
+
+
 function drawBoard() {
   var board = $('<div/>', {
     'class': 'board'
@@ -144,7 +268,7 @@ function drawBoard() {
     var height = $(window).width() / 2;
     var cell = height / 11;
     var string = 'repeat(11, ' + cell + 'px)';
-    console.log(string)
+    console.log(string);
     return string;
   });
   $(board).css('grid-template-rows', function() {
@@ -161,3 +285,4 @@ function drawBoard() {
 
   return board;
 }
+
