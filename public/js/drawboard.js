@@ -62,6 +62,16 @@ function origin(board) {
   $(board).append(origin);
 }
 
+// https://stackoverflow.com/questions/9659265/check-if-javascript-script-exists-on-page
+function isScriptLoaded(url) {
+  let scripts = document.getElementsByTagName('script')
+  for (let i = scripts.length; i--;) {
+    if (scripts[i].src === url) return true
+  }
+  return false
+}
+
+
 
 function drawGrid(board, numbers, letters) {
   numbersArray = numbers.map(Number);
@@ -72,6 +82,8 @@ function drawGrid(board, numbers, letters) {
         'name': letters[y - 1] + '-' + x,
         'class': letters[y - 1] + '-' + x
       });
+
+      if (isScriptLoaded("https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js")) {
       $(cell).droppable({
 
         drop: function(event, ui) {
@@ -239,6 +251,7 @@ function drawGrid(board, numbers, letters) {
           }
         }
       });
+}
 
 
       $(cell).css({ 'height': '100%', 'width': '100%', 'display': 'flex', 'justify-content': 'center', 'align-items': 'center', 'border-bottom': '1px solid black', 'border-right': '1px solid black' });
@@ -280,11 +293,11 @@ function drawBoard() {
     var string = 'repeat(11, ' + cell + 'px)';
     return string;
   });
-  let form = $('<form/>', {
+  /*let form = $('<form/>', {
     'method': 'POST',
     'action': '/addPlayerone',
     'id': 'boardForm',
-  })
+  })*/
 
 
   origin(board);

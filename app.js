@@ -59,10 +59,10 @@ app.get('/player1turn', (req, res) => {
   let templateVars = {player: 'player 1',
                       url: '/inter2'}
   res.render('player1turn', templateVars)
-})
+});
 
 app.post('/inter2', (req, res) => {
-  res.render('inter2')
+  res.render('inter2');
 })
 
 app.get('/inter2', (req, res) => {
