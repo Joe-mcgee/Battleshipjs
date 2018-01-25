@@ -61,6 +61,26 @@ app.get('/player1turn', (req, res) => {
   res.render('player1turn', templateVars)
 })
 
+app.post('/inter2', (req, res) => {
+  res.render('inter2')
+})
+
+app.get('/inter2', (req, res) => {
+  let templateVars = {player: 'player 2',
+                      url: '/player2turn'}
+  res.render('inter2', templateVars)
+})
+
+app.post('/player2turn', (req, res) => {
+  res.render('player2turn');
+})
+
+app.get('/player2turn', (req, res) => {
+  let templateVars = {player: 'player 2',
+                        url: '/inter1'}
+  res.render('player2turn', templateVars);
+})
+
 app.listen(8080);
 
 console.log('listening on port 8080');

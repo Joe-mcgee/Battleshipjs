@@ -125,7 +125,6 @@ function drawGrid(board, numbers, letters) {
             width = battleship.clientWidth;
             x = coords[0];
             y = coords[1];
-            console.log(coords)
             location = [];
             if (height > width) {
               location = [

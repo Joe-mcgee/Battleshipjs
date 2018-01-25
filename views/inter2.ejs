@@ -1,0 +1,16 @@
+<!doctype html>
+<html>
+  <head>
+
+  </head>
+  <body>
+     <%- include('partials/nav') %>
+    <div id='status'>
+      <h2>A vast Ye Swabs! <%= player%> to yer Battle Station!  </h2>
+      <form action='<%= url %>'>
+        <input type='submit' value='Begin Turn'>
+      </form>
+    </div>
+    <%- include('partials/board') %>
+
+  </body>
