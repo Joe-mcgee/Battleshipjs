@@ -46,8 +46,19 @@ app.get('/newp2', (req, res) => {
 
 
 app.get('/inter1', (req, res) => {
-  let templateVars = {player: 'player1'}
+  let templateVars = {player: 'player1',
+                      url: '/player1turn'}
   res.render('inter', templateVars)
+})
+
+app.post('/player1turn', (req, res) => {
+  res.render('player1turn')
+})
+
+app.get('/player1turn', (req, res) => {
+  let templateVars = {player: 'player 1',
+                      url: '/inter2'}
+  res.render('player1turn', templateVars)
 })
 
 app.listen(8080);
