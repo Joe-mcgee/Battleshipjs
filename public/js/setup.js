@@ -6,17 +6,11 @@ $(document).ready( function () {
   $('.main-box').append(allocShips());
 });
 
-let submitButton = $('<input/>', {
-  'type': 'submit',
-  'form': 'boardForm',
-  'value': 'submit'
+
+/*$(document).ready( function () {
+  $('.main-box').append(submitButton);
 });
-$(submitButton).attr('form', 'boardForm')
-$(submitButton).append(document.createTextNode('confirm placement'))
-$(document).ready( function () {
-  $('.main-box').append(submitButton)
-})
 
-
+*/
 
 

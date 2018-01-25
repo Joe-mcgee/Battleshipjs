@@ -36,11 +36,14 @@ function allocShips() {
   let instructions = $('<div/>', {
     'id': 'instructions'
   });
-  let instrutTitle = $('<h1/>', {
-    'id': 'instructT'
-  });
-  $(instrutTitle).append(document.createTextNode('Please deploy your fleet, Player 1'));
-  $(instructions).append(instrutTitle);
+  let submitButton = $('<input/>', {
+  'type': 'submit',
+  'form': 'boardForm',
+  'value': 'submit'
+});
+$(submitButton).attr('form', 'boardForm');
+$(submitButton).append(document.createTextNode('confirm placement'));
+  $(instructions).append(submitButton);
   $(instructions).css({ 'grid-row': '2', 'grid-column': '1/2', 'height': '100%', 'width': '100%', 'display': 'flex', 'justify-content': 'center', 'align-items': 'center' });
   $(shipYard).append(instructions);
 

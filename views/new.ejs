@@ -14,7 +14,12 @@
   </head>
   <body>
     <%- include('partials/nav') %>
+    <div id='status'>
+      <h2>Please Place your Ships <%= player%></h2>
+    </div>
+    <form method='POST' action='<%= url%>' id='boardForm'>
     <%- include('partials/board') %>
+    </form>
 
 
 

@@ -2,7 +2,7 @@ const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
 const numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
 
 function divcoords(div) {
-  let coords = $(div).attr('class').match(/([A-Z]-[1-9]|[A-Z]-10)/)[0];
+  let coords = $(div).attr('class').match(/([A-Z]-10|[A-Z]-[1-9])/)[0];
   let x = coords.split('-')[0].toLowerCase().charCodeAt(0) - 96
   let y = Number(coords.split('-')[1]);
   return [x, y]
@@ -92,8 +92,10 @@ function drawGrid(board, numbers, letters) {
             let carrier = document.getElementById('Carrier');
             height = carrier.clientHeight;
             width = carrier.clientWidth;
+
             x = coords[0];
             y = coords[1];
+            console.log(y)
             location = [];
             if (height > width) {
               location = [
@@ -242,12 +244,12 @@ function drawGrid(board, numbers, letters) {
 
       $(cell).css({ 'height': '100%', 'width': '100%', 'display': 'flex', 'justify-content': 'center', 'align-items': 'center', 'border-bottom': '1px solid black', 'border-right': '1px solid black' });
       $(cell).css('grid-column', function() {
-        var column = (y + 1).toString();
+        var column = (y+1).toString();
         return column;
       });
 
       $(cell).css('grid-row', function() {
-        var row = (x + 1).toString();
+        var row = (x+1).toString();
         return row;
       });
       $(board).append(cell);
@@ -290,8 +292,7 @@ function drawBoard() {
   xaxis(board, letters);
   yaxis(board, numbers);
   drawGrid(board, numbers, letters);
- $(form).append(board)
 
-  return form;
+  return board;
 }
 
