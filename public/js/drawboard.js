@@ -68,7 +68,8 @@ function drawGrid(board, numbers, letters) {
   numbersArray.forEach(function(y) {
     numbersArray.forEach(function(x) {
       var reference = [x, y];
-      var cell = $('<div/>', {
+      var cell = $('<select/>', {
+        'name': letters[y - 1] + '-' + x,
         'class': letters[y - 1] + '-' + x
       });
       $(cell).droppable({
@@ -86,6 +87,7 @@ function drawGrid(board, numbers, letters) {
           let location;
           if (ui.draggable.is('#Carrier')) {
             baseMarker = $(this);
+            console.log(baseMarker)
             coords = divcoords(baseMarker);
             let carrier = document.getElementById('Carrier');
             height = carrier.clientHeight;
@@ -110,7 +112,7 @@ function drawGrid(board, numbers, letters) {
             }
             location.forEach((spot) => {
               var spotdiv = coordsToDiv(spot);
-              $(spotdiv).append("<div class='Carrier-mark'>Carrier Mark</div>");
+              $(spotdiv).append("<option class='Carrier-mark' value='Carrier-mark'>Carrier Mark</div>");
             });
           } else if (ui.draggable.is('#Battleship')) {
             baseMarker = $(this);
@@ -138,7 +140,7 @@ function drawGrid(board, numbers, letters) {
             }
             location.forEach((spot) => {
               let spotdiv = coordsToDiv(spot);
-              $(spotdiv).append("<div class='Battleship-mark'>Battleship Mark</div>");
+              $(spotdiv).append("<option class='Battleship-mark' value='Battleship-mark'>Battleship Mark</div>");
             });
             let marker = coordsToDiv(coords);
           } else if (ui.draggable.is('#Submarine')) {
@@ -164,7 +166,7 @@ function drawGrid(board, numbers, letters) {
             }
             location.forEach((spot) => {
               let spotdiv = coordsToDiv(spot);
-              $(spotdiv).append("<div class='Submarine-mark'>Submarine mark</div>");
+              $(spotdiv).append("<option class='Submarine-mark' value='Submarine-mark'>Submarine mark</div>");
             });
             let marker = coordsToDiv(coords);
           } else if (ui.draggable.is('#Cruiser')) {
@@ -190,7 +192,7 @@ function drawGrid(board, numbers, letters) {
             }
             location.forEach((spot) => {
               let spotdiv = coordsToDiv(spot);
-              $(spotdiv).append("<div class='Cruiser-mark'>Cruiser mark</div>");
+              $(spotdiv).append("<option class='Cruiser-mark' value='Cruiser-mark'>Cruiser mark</div>");
             });
             let marker = coordsToDiv(coords);
           } else if (ui.draggable.is('#Destroyer')) {
@@ -216,7 +218,7 @@ function drawGrid(board, numbers, letters) {
             }
             location.forEach((spot) => {
               let spotdiv = coordsToDiv(spot);
-              $(spotdiv).append("<div class='Destroyer-mark'>Destroyer mark</div>");
+              $(spotdiv).append("<option class='Destroyer-mark' value='Destroyer-mark'>Destroyer mark</div>");
             });
             let marker = coordsToDiv(coords);
           }
@@ -277,12 +279,19 @@ function drawBoard() {
     var string = 'repeat(11, ' + cell + 'px)';
     return string;
   });
+  let form = $('<form/>', {
+    'method': 'POST',
+    'action': '/addPlayerone',
+    'id': 'boardForm',
+  })
+
+
   origin(board);
   xaxis(board, letters);
   yaxis(board, numbers);
   drawGrid(board, numbers, letters);
+ $(form).append(board)
 
-
-  return board;
+  return form;
 }
 
