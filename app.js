@@ -1,7 +1,13 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
+/*const MongoClient = require('mongodb').MongoClient;
+const url = 'mongodb://localhost:2017/battleshipDb';
+const dbName = 'battleshipDb'
+MongoClient.connect(url, (err, client) => {
 
+})
+*/
 // set static directory
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -28,8 +34,6 @@ function Player(name, coords) {
                 Cruiser: [],
                 Destroyer: []
               }
-
-  console.log(this.ships)
   for (coord in coords) {
     let cruiser = RegExp("^Cruiser")
     if (cruiser.test(coords[coord])) {
@@ -47,12 +51,13 @@ function Player(name, coords) {
     if (battleship.test(coords[coord])) {
       this.ships['Battleship'].push(coord);
     }
-    let destroyer = RegExp("^Destroyer")
+    let destroyer = RegExp("^Destroyer");
     if (destroyer.test(coords[coord])) {
-      this.ships['Destroyer'].test(coord);
+      this.ships['Destroyer'].push(coord);
     }
   }
 }
+
 function filterName(form) {
   let result = form;
   for (let key in result) {
@@ -83,7 +88,8 @@ app.get('/new', (req, res) => {
 
 //posts options and init to server
 app.post('/new', (req, res) => {
-
+  let id = getGameId(tempdb);
+  tempdb[id] = {};
   let templateVars = {
     player: 'player 1',
     url: '/addPlayerone'
@@ -93,22 +99,27 @@ app.post('/new', (req, res) => {
 
 // posts player ones ships to server
 app.post('/addPlayerone', (req, res) => {
-  let id = tempdb[Object.keys(tempdb)[Object.keys(tempdb).length - 1]]
+  let id = Object.keys(tempdb)[Object.keys(tempdb).length - 1];
   let name = req.body.name;
   let form = req.body;
   let coords = filterName(form);
 
-  let player1 = new Player(name, coords)
-
-  console.log(player1)
-
+  let player1 = new Player(name, coords);
+  tempdb[id][player1.name] = player1.ships;
   res.redirect('newp2');
 
 });
 
 // posts player twos ships to server, initializes the pass screen
 app.post('/addPlayerTwo', (req, res) => {
-  console.log(req.body);
+  let id = Object.keys(tempdb)[Object.keys(tempdb).length - 1];
+  let name = req.body.name;
+  let form = req.body;
+  let coords = filterName(form);
+
+  let player2 = new Player(name, coords);
+  tempdb[id][player2.name] = player2.ships;
+  console.log(tempdb);
   res.redirect('inter1');
 });
 
