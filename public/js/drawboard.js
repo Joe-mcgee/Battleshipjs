@@ -17,8 +17,6 @@ function coordsToDiv(coords) {
   return div
 }
 
-
-
 function xaxis(board, letters) {
   letters.forEach(function(letter, i) {
     var letterdiv = $('<div/>', {
@@ -71,9 +69,8 @@ function isScriptLoaded(url) {
   return false
 }
 
-
-
-function drawGrid(board, numbers, letters) {
+//display types
+function drawGridWithDrop(board, numbers, letters) {
   numbersArray = numbers.map(Number);
   numbersArray.forEach(function(y) {
     numbersArray.forEach(function(x) {
@@ -266,67 +263,7 @@ function drawGrid(board, numbers, letters) {
   });
 }
 
-
-
-function drawBoard() {
-  var board = $('<div/>', {
-    'class': 'board'
-  });
-  $(board).css({ 'display': 'grid' });
-  $(board).css('grid-template-columns', function() {
-    var height = $(window).width() / 2;
-    var cell = height / 11;
-    var string = 'repeat(11, ' + cell + 'px)';
-    console.log(string);
-    return string;
-  });
-  $(board).css('grid-template-rows', function() {
-    var width = $(window).width() / 2;
-    var cell = width / 11;
-    var string = 'repeat(11, ' + cell + 'px)';
-    return string;
-  });
-  /*let form = $('<form/>', {
-    'method': 'POST',
-    'action': '/addPlayerone',
-    'id': 'boardForm',
-  })*/
-
-
-  origin(board);
-  xaxis(board, letters);
-  yaxis(board, numbers);
-  drawGrid(board, numbers, letters);
-
-  return board;
-}
-
-function displayBoard() {
-  var board = $('<div/>', {
-    'class': 'board'
-  });
-  $(board).css({ 'display': 'grid' });
-  $(board).css('grid-template-columns', function() {
-    var height = $(window).width() / 2;
-    var cell = height / 11;
-    var string = 'repeat(11, ' + cell + 'px)';
-    console.log(string);
-    return string;
-  });
-  $(board).css('grid-template-rows', function() {
-    var width = $(window).width() / 2;
-    var cell = width / 11;
-    var string = 'repeat(11, ' + cell + 'px)';
-    return string;
-  });
-
-  origin(board);
-  xaxis(board, letters);
-  yaxis(board, numbers);
-  displayGrid(board, numbers, letters);
-}
-
-/*function displayGrid(board, numbers, letters, ships) {
+function displayGrid(board, numbers, letters) {
   numbersArray = numbers.map(Number);
   numbersArray.forEach(function(y) {
     numbersArray.forEach(function(x) {
@@ -345,12 +282,100 @@ function displayBoard() {
         var row = (x + 1).toString();
         return row;
       });
+      console.log($(cell).attr('class'));
+      for (ship in fleet) {
+        let coords = fleet[ship];
+        coords.forEach((coord) => {
+          if (coord === $(cell).attr('class')) {
+            $(cell).css({'background-color': 'white'});
+          }
+        });
+      }
 
       $(board).append(cell);
 
     });
   });
-}*/
+}
+
+function fireGrid(board, numbers, letters) {
+  numbersArray = numbers.map(Number);
+  numbersArray.forEach(function(y) {
+    numbersArray.forEach(function(x) {
+      var reference = [x, y];
+      var cell = $('<input/>', {
+        'type': 'radio',
+        'name': 'coord',
+        'class': letters[y - 1] + '-' + x,
+        'value': letters[y - 1] + '-' + x
+      });
+      $(cell).css({ 'height': '100%', 'width': '100%', 'display': 'flex', 'justify-content': 'center', 'align-items': 'center', 'border-bottom': '1px solid black', 'border-right': '1px solid black' });
+      $(cell).css('grid-column', function() {
+        var column = (y + 1).toString();
+        return column;
+      });
+
+      $(cell).css('grid-row', function() {
+        var row = (x + 1).toString();
+        return row;
+      });
+      console.log($(cell).attr('class'));
+
+      $(board).append(cell);
+
+    });
+  });
+}
+
+
+
+function drawBoard(mode) {
+  var board = $('<div/>', {
+    'class': 'board'
+  });
+  $(board).css({ 'display': 'grid' });
+  $(board).css('grid-template-columns', function() {
+    var height = $(window).width() / 2;
+    var cell = height / 11;
+    var string = 'repeat(11, ' + cell + 'px)';
+    console.log(string);
+    return string;
+  });
+  $(board).css('grid-template-rows', function() {
+    var width = $(window).width() / 2;
+    var cell = width / 11;
+    var string = 'repeat(11, ' + cell + 'px)';
+    return string;
+  });
+
+  let form;
+  if (mode === 'fire') {
+    form = $('<form/>', {
+      'action': '/inter2',
+      'method': 'POST',
+      'id': 'fire'
+    });
+    $(form).append(board);
+  }
+
+
+  origin(board);
+  xaxis(board, letters);
+  yaxis(board, numbers);
+  switch (mode) {
+    case 'init':
+      drawGridWithDrop(board, numbers, letters);
+      break;
+    case 'display':
+      displayGrid(board, numbers, letters);
+      break;
+    case 'fire':
+      fireGrid(board, numbers, letters);
+      return form;
+  }
+  return board;
+}
+
 
 
 

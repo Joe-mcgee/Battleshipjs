@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
-const db = require('./db.js')
+const db = require('./db.js');
 /*const MongoClient = require('mongodb').MongoClient;
 const url = 'mongodb://localhost:2017/battleshipDb';
 const dbName = 'battleshipDb'
@@ -167,7 +167,7 @@ app.get('/player1turn', (req, res) => {
 });
 
 app.post('/inter2', (req, res) => {
-  res.render('inter2');
+  res.redirect('inter2');
 });
 
 app.get('/inter2', (req, res) => {

@@ -1,35 +1,35 @@
-function displayGrid(board, numbers, letters, ships) {
-  numbersArray = numbers.map(Number);
-  numbersArray.forEach(function(y) {
-    numbersArray.forEach(function(x) {
-      var reference = [x, y];
-      var cell = $('<div/>', {
-        'name': letters[y - 1] + '-' + x,
-        'class': letters[y - 1] + '-' + x
-      });
-      $(cell).css({ 'height': '100%', 'width': '100%', 'display': 'flex', 'justify-content': 'center', 'align-items': 'center', 'border-bottom': '1px solid black', 'border-right': '1px solid black' });
-      $(cell).css('grid-column', function() {
-        var column = (y + 1).toString();
-        return column;
-      });
 
-      $(cell).css('grid-row', function() {
-        var row = (x + 1).toString();
-        return row;
-      });
-      console.log(cell.class() === ships);
-
-      $(board).append(cell);
-
-    });
+/*
+function shipBoard() {
+  var board = $('<div/>', {
+    'class': 'board'
   });
-}
+  $(board).css({ 'display': 'grid' });
+  $(board).css('grid-template-columns', function() {
+    var height = $(window).width() / 2;
+    var cell = height / 11;
+    var string = 'repeat(11, ' + cell + 'px)';
+    console.log(string);
+    return string;
+  });
+  $(board).css('grid-template-rows', function() {
+    var width = $(window).width() / 2;
+    var cell = width / 11;
+    var string = 'repeat(11, ' + cell + 'px)';
+    return string;
+  });
+
+  origin(board);
+  xaxis(board, letters);
+  yaxis(board, numbers);
+  displayGrid(board, numbers, letters);
+  return board
+}*/
 
 
 $(document).ready(function() {
-  console.log('check')
-  $('.main-box').append(drawBoard());
- /* $('.main-box').append(displayBoard(board, numbers, letters, fleet));*/
+  $('.main-box').append(drawBoard('fire'));
+  $('.main-box').append(drawBoard('display'));
 });
 
 

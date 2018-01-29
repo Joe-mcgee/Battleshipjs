@@ -4,12 +4,12 @@ $(document).ready(function() {
     'action':'/new',
     'method': 'post'
   });
-  $(newGame).css({'display': 'grid', 'grid-template-rows': '1fr 1fr'})
+  $(newGame).css({'display': 'grid', 'grid-template-rows': '1fr 1fr'});
 
   let newButton = $('<input/>', {
     'id': 'new',
     'type': 'submit'
-  })
+  });
 
   $(newButton).css({ 'grid-row': '1', 'height': '100%', 'width': '100%', 'display': 'flex', 'align-items': 'center', 'justify-content': 'center' });
   newButton.append(document.createTextNode('New Game'));
