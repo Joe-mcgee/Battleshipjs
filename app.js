@@ -142,6 +142,10 @@ app.get('/inter1', (req, res) => {
   res.render('inter', templateVars);
 });
 
+app.post('/inter1', (req, res) => {
+  res.redirect('inter1');
+});
+
 // posts player ones move to server
 app.post('/player1turn', (req, res) => {
   let id = getGameId(db.tempdb);
@@ -183,9 +187,14 @@ app.post('/player2turn', (req, res) => {
 });
 
 app.get('/player2turn', (req, res) => {
+  let id = getGameId(db.tempdb);
+  let name = Object.keys(db.tempdb[id])[1];
+  let player2Coords = db.tempdb[id][name];
+  console.log(player2Coords);
   let templateVars = {
     player: 'player 2',
-    url: '/inter1'
+    url: '/inter1',
+    ships: player2Coords
   };
   res.render('player2turn', templateVars);
 });

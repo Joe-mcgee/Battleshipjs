@@ -358,6 +358,14 @@ function drawBoard(mode) {
     $(form).append(board);
   }
 
+  if (mode === 'fire2') {
+    form = $('<form/>', {
+      'action': '/inter1',
+      'method': 'POST',
+      'id': 'fire'
+    });
+    $(form).append(board);
+  }
 
   origin(board);
   xaxis(board, letters);
@@ -370,11 +378,14 @@ function drawBoard(mode) {
       displayGrid(board, numbers, letters);
       break;
     case 'fire':
+    case 'fire2':
       fireGrid(board, numbers, letters);
       return form;
   }
+
   return board;
 }
+
 
 
 
