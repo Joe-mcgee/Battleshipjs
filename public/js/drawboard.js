@@ -326,7 +326,7 @@ function displayBoard() {
   displayGrid(board, numbers, letters);
 }
 
-function displayGrid(board, numbers, letters, ships) {
+/*function displayGrid(board, numbers, letters, ships) {
   numbersArray = numbers.map(Number);
   numbersArray.forEach(function(y) {
     numbersArray.forEach(function(x) {
@@ -350,7 +350,7 @@ function displayGrid(board, numbers, letters, ships) {
 
     });
   });
-}
+}*/
 
 
 
