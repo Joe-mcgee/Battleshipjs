@@ -15,15 +15,16 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 let tempdb = {};
 
-
-
-
-function getGameId(tempdb) {
+function makeGameId(tempdb) {
   let output = 0;
   for (id in tempdb) {
     output += 1;
   }
   return output;
+}
+
+function getGameId(tempdb) {
+  return Object.keys(tempdb)[Object.keys(tempdb).length - 1];
 }
 
 function Player(name, coords) {
@@ -88,7 +89,7 @@ app.get('/new', (req, res) => {
 
 //posts options and init to server
 app.post('/new', (req, res) => {
-  let id = getGameId(tempdb);
+  let id = makeGameId(tempdb);
   tempdb[id] = {};
   let templateVars = {
     player: 'player 1',
@@ -99,7 +100,7 @@ app.post('/new', (req, res) => {
 
 // posts player ones ships to server
 app.post('/addPlayerone', (req, res) => {
-  let id = Object.keys(tempdb)[Object.keys(tempdb).length - 1];
+  let id = getGameId(tempdb);
   let name = req.body.name;
   let form = req.body;
   let coords = filterName(form);
@@ -112,7 +113,7 @@ app.post('/addPlayerone', (req, res) => {
 
 // posts player twos ships to server, initializes the pass screen
 app.post('/addPlayerTwo', (req, res) => {
-  let id = Object.keys(tempdb)[Object.keys(tempdb).length - 1];
+  let id = getGameId(tempdb);
   let name = req.body.name;
   let form = req.body;
   let coords = filterName(form);
@@ -144,14 +145,24 @@ app.get('/inter1', (req, res) => {
 
 // posts player ones move to server
 app.post('/player1turn', (req, res) => {
+  let id = getGameId(tempdb);
+
   res.redirect('player1turn');
 });
 
 
 app.get('/player1turn', (req, res) => {
+  console.log(tempdb);
+  //grab player ones, ship coordinates
+  let id = getGameId(tempdb);
+  let name = Object.keys(tempdb[id])[0];
+  let ownCoords = tempdb[id][name];
+  console.log(coords);
+
   let templateVars = {
     player: 'player 1',
-    url: '/inter2'
+    url: '/inter2',
+    ships: ownCoords,
   };
   res.render('player1turn', templateVars);
 });
