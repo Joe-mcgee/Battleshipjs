@@ -290,21 +290,17 @@ function displayGrid(board, numbers, letters) {
           }
           if (coord === 'X' + $(cell).attr('class')) {
             $(cell).css({'background-color': 'red'});
+            previousTargets = previousTargets.filter(item => item !== coord)
         }
         });
       });
 
+      otherShots.forEach((target) => {
+        if (target === $(cell).attr('class')) {
+          $(cell).css({'background-color': 'black'})
+        }
+      });
 
-
-      /*
-                if (Object.keys(coord) == $(cell).attr('class')) {
-                  switch (Object.values(coord)) {
-                    case false:
-                      $(cell).css({ 'background-color': 'red' });
-                      break;
-                    case true:
-                      $(cell).css({ 'background-color': 'white' });
-                  }*/
       $(board).append(cell);
 
     });
@@ -332,20 +328,16 @@ function fireGrid(board, numbers, letters) {
         var row = (x + 1).toString();
         return row;
       });
-      console.log(1, previousTargets)
       previousTargets.forEach((target) => {
-        console.log(2, target)
         if (target == $(cell).attr('class')) {
-          console.log(3)
           $(cell).attr('disabled', true);
           $(cell).css({'display': 'none'})
         }
         if (target == 'X' + $(cell).attr('class')) {
-          console.log(4);
           cell = $('<div/>', {
             'class': letters[y - 1] + '-' + x
           });
-          $(cell).css({'background': 'red', 'width': '100%', 'height':'100%'})
+          $(cell).css({'background': 'red', 'width': '100%', 'height': '100%'})
         }
 
       })

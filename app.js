@@ -92,8 +92,6 @@ function checkCoords(shot, target) {
   return false;
 }
 
-
-
 function destroyShip(shot, target) {
   for (ship in target) {
     let coords = target[ship];
@@ -106,9 +104,6 @@ function destroyShip(shot, target) {
     }
   }
 }
-
-
-
 
 //use ejs templating engine
 app.set('view engine', 'ejs');
@@ -214,10 +209,12 @@ app.get('/player1turn', (req, res) => {
   let id = getGameId(db.tempdb);
   let name = Object.keys(db.tempdb[id])[0];
   let player1Coords = db.tempdb[id][name];
+  let player2PrevShots = getPlayerCoords(1)['targets']
   let templateVars = {
     player: 'player 1',
     url: '/inter2',
-    ships: player1Coords
+    ships: player1Coords,
+    otherShots: player2PrevShots
   };
   res.render('player1turn', templateVars);
 });
@@ -253,10 +250,12 @@ app.get('/player2turn', (req, res) => {
   let id = getGameId(db.tempdb);
   let name = Object.keys(db.tempdb[id])[1];
   let player2Coords = db.tempdb[id][name];
+  let player1PrevShots = getPlayerCoords(0)['targets']
   let templateVars = {
     player: 'player 2',
     url: '/inter1',
-    ships: player2Coords
+    ships: player2Coords,
+    otherShots: player1PrevShots
   };
   res.render('player2turn', templateVars);
 });
