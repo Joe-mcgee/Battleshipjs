@@ -285,14 +285,14 @@ function displayGrid(board, numbers, letters) {
 
       fleet.forEach((ship) => {
         ship.forEach((coord) => {
-          if (coord == $(cell).attr('class')) {
+          if (coord === $(cell).attr('class')) {
             $(cell).css({'background-color': 'white'});
           }
-          if (coord == 'X' + $(cell).attr('class')) {
+          if (coord === 'X' + $(cell).attr('class')) {
             $(cell).css({'background-color': 'red'});
         }
-        })
-      })
+        });
+      });
 
 
 

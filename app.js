@@ -176,6 +176,16 @@ app.get('/inter1', (req, res) => {
 });
 
 app.post('/inter1', (req, res) => {
+  let player1Coords = getPlayerCoords(0);
+  let player2Coords = getPlayerCoords(1);
+  let shot = req.body.coord;
+
+  let isHit = checkCoords(shot, player1Coords);
+  if (isHit) {
+    destroyShip(shot, player1Coords);
+    console.log(player1Coords);
+  }
+
   res.redirect('inter1');
 });
 
@@ -208,7 +218,7 @@ app.post('/inter2', (req, res) => {
   let isHit = checkCoords(shot, player2Coords);
   if (isHit) {
     destroyShip(shot, player2Coords);
-    console.log(player2Coords)
+    console.log(player2Coords);
   }
 
 
