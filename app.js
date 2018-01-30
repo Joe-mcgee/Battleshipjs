@@ -80,10 +80,12 @@ function getPlayerCoords(player) {
 function checkCoords(shot, target) {
   for (ship in target) {
     let coords = target[ship];
-    for (let i = 0; i < coords.length; i++) {
-      let coord = coords[i];
-      if (shot == coord) {
-        return true;
+    if (ship !== 'targets') {
+      for (let i = 0; i < coords.length; i++) {
+        let coord = coords[i];
+        if (shot == coord) {
+          return true;
+        }
       }
     }
   }
@@ -91,17 +93,21 @@ function checkCoords(shot, target) {
 }
 
 
+
 function destroyShip(shot, target) {
   for (ship in target) {
     let coords = target[ship];
-    coords.forEach((item, i) => {
-      if (item === shot) {
-        console.log(item);
-        target[ship][i] = 'X' + item;
-      }
-    });
+    if (ship !== 'targets') {
+      coords.forEach((item, i) => {
+        if (item === shot) {
+          target[ship][i] = 'X' + item;
+        }
+      });
+    }
   }
 }
+
+
 
 
 //use ejs templating engine
@@ -140,6 +146,8 @@ app.post('/addPlayerone', (req, res) => {
 
   let player1 = new Player(name, coords);
   db.tempdb[id][player1.name] = player1.ships;
+  db.tempdb[id][player1.name]['targets'] = [];
+  console.log(db.tempdb)
   res.redirect('newp2');
 
 });
@@ -153,6 +161,7 @@ app.post('/addPlayerTwo', (req, res) => {
 
   let player2 = new Player(name, coords);
   db.tempdb[id][player2.name] = player2.ships;
+  db.tempdb[id][player2.name]['targets'] = [];
   res.redirect('inter1');
 });
 
@@ -182,8 +191,11 @@ app.post('/inter1', (req, res) => {
 
   let isHit = checkCoords(shot, player1Coords);
   if (isHit) {
+    player2Coords['targets'].push('X' + shot);
     destroyShip(shot, player1Coords);
-    console.log(player1Coords);
+
+  } else {
+    player2Coords['targets'].push(shot);
   }
 
   res.redirect('inter1');
@@ -214,14 +226,13 @@ app.post('/inter2', (req, res) => {
   let player1Coords = getPlayerCoords(0);
   let player2Coords = getPlayerCoords(1);
   let shot = req.body.coord;
-
   let isHit = checkCoords(shot, player2Coords);
   if (isHit) {
+    player1Coords['targets'].push('X' + shot);
     destroyShip(shot, player2Coords);
-    console.log(player2Coords);
+  } else {
+    player1Coords['targets'].push(shot);
   }
-
-
 
   res.redirect('inter2');
 });

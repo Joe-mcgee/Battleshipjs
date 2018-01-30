@@ -311,8 +311,6 @@ function displayGrid(board, numbers, letters) {
   });
 }
 
-
-
 function fireGrid(board, numbers, letters) {
   numbersArray = numbers.map(Number);
   numbersArray.forEach(function(y) {
@@ -334,14 +332,30 @@ function fireGrid(board, numbers, letters) {
         var row = (x + 1).toString();
         return row;
       });
+      console.log(1, previousTargets)
+      previousTargets.forEach((target) => {
+        console.log(2, target)
+        if (target == $(cell).attr('class')) {
+          console.log(3)
+          $(cell).attr('disabled', true);
+          $(cell).css({'display': 'none'})
+        }
+        if (target == 'X' + $(cell).attr('class')) {
+          console.log(4);
+          cell = $('<div/>', {
+            'class': letters[y - 1] + '-' + x
+          });
+          $(cell).css({'background': 'red', 'width': '100%', 'height':'100%'})
+        }
+
+      })
+
 
       $(board).append(cell);
 
     });
   });
 }
-
-
 
 function drawBoard(mode) {
   var board = $('<div/>', {
