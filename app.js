@@ -33,19 +33,19 @@ function Player(name, coords) {
                 Submarine: [],
                 Cruiser: [],
                 Destroyer: []
-              }
+              };
   for (coord in coords) {
-    let cruiser = RegExp("^Cruiser")
+    let cruiser = RegExp("^Cruiser");
     if (cruiser.test(coords[coord])) {
       this.ships['Cruiser'].push(coord);
     }
-    let submarine = RegExp("^Submarine")
+    let submarine = RegExp("^Submarine");
     if (submarine.test(coords[coord])) {
       this.ships['Submarine'].push(coord);
     }
     let carrier = RegExp("^Carrier");
     if (carrier.test(coords[coord])) {
-      this.ships['Carrier'].push(coord)
+      this.ships['Carrier'].push(coord);
     }
     let battleship = RegExp("^Battleship");
     if (battleship.test(coords[coord])) {
@@ -68,6 +68,40 @@ function filterName(form) {
   return result;
 }
 
+//player is zero for p1 and 1 for p2
+function getPlayerCoords(player) {
+  let id = getGameId(db.tempdb);
+  let name = Object.keys(db.tempdb[id])[player];
+  let playerCoords = db.tempdb[id][name];
+  return playerCoords;
+}
+
+//target is the ships with coords object
+function checkCoords(shot, target) {
+  for (ship in target) {
+    let coords = target[ship];
+    for (let i = 0; i < coords.length; i++) {
+      let coord = coords[i];
+      if (shot == coord) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+
+function destroyShip(shot, target) {
+  for (ship in target) {
+    let coords = target[ship];
+    coords.forEach((item, i) => {
+      if (item === shot) {
+        console.log(item)
+        target[ship][i] = 'X';
+      }
+    });
+  }
+}
 
 
 //use ejs templating engine
@@ -119,7 +153,6 @@ app.post('/addPlayerTwo', (req, res) => {
 
   let player2 = new Player(name, coords);
   db.tempdb[id][player2.name] = player2.ships;
-  console.log(db.tempdb);
   res.redirect('inter1');
 });
 
@@ -155,13 +188,10 @@ app.post('/player1turn', (req, res) => {
 
 
 app.get('/player1turn', (req, res) => {
-  console.log(db.tempdb);
   //grab player ones, ship coordinates
   let id = getGameId(db.tempdb);
   let name = Object.keys(db.tempdb[id])[0];
   let player1Coords = db.tempdb[id][name];
-  console.log(player1Coords);
-
   let templateVars = {
     player: 'player 1',
     url: '/inter2',
@@ -171,6 +201,18 @@ app.get('/player1turn', (req, res) => {
 });
 
 app.post('/inter2', (req, res) => {
+  let player1Coords = getPlayerCoords(0);
+  let player2Coords = getPlayerCoords(1);
+  let shot = req.body.coord;
+
+  let isHit = checkCoords(shot, player2Coords);
+  if (isHit) {
+    destroyShip(shot, player2Coords);
+    console.log(player2Coords)
+  }
+
+
+
   res.redirect('inter2');
 });
 
@@ -190,7 +232,6 @@ app.get('/player2turn', (req, res) => {
   let id = getGameId(db.tempdb);
   let name = Object.keys(db.tempdb[id])[1];
   let player2Coords = db.tempdb[id][name];
-  console.log(player2Coords);
   let templateVars = {
     player: 'player 2',
     url: '/inter1',

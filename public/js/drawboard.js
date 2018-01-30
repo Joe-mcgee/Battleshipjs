@@ -3,18 +3,18 @@ const numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
 
 function divcoords(div) {
   let coords = $(div).attr('class').match(/([A-Z]-10|[A-Z]-[1-9])/)[0];
-  let x = coords.split('-')[0].toLowerCase().charCodeAt(0) - 96
+  let x = coords.split('-')[0].toLowerCase().charCodeAt(0) - 96;
   let y = Number(coords.split('-')[1]);
-  return [x, y]
+  return [x, y];
 }
 
 function coordsToDiv(coords) {
   let x = coords[0];
   let y = coords[1];
-  let letter = String.fromCharCode(96 + x).toUpperCase()
+  let letter = String.fromCharCode(96 + x).toUpperCase();
   let linkToGrid = '.' + letter + '-' + y;
-  let div = $(linkToGrid)
-  return div
+  let div = $(linkToGrid);
+  return div;
 }
 
 function xaxis(board, letters) {
@@ -268,7 +268,7 @@ function displayGrid(board, numbers, letters) {
   numbersArray.forEach(function(y) {
     numbersArray.forEach(function(x) {
       var reference = [x, y];
-      var cell = $('<div/>', {
+      let cell = $('<div/>', {
         'name': letters[y - 1] + '-' + x,
         'class': letters[y - 1] + '-' + x
       });
@@ -281,22 +281,34 @@ function displayGrid(board, numbers, letters) {
       $(cell).css('grid-row', function() {
         var row = (x + 1).toString();
         return row;
-      });
-      console.log($(cell).attr('class'));
-      for (ship in fleet) {
-        let coords = fleet[ship];
-        coords.forEach((coord) => {
-          if (coord === $(cell).attr('class')) {
+      })
+
+      fleet.forEach((ship) => {
+        ship.forEach((coord) => {
+          if (coord == $(cell).attr('class')) {
             $(cell).css({'background-color': 'white'});
           }
-        });
-      }
+        })
+      })
 
+
+
+      /*
+                if (Object.keys(coord) == $(cell).attr('class')) {
+                  switch (Object.values(coord)) {
+                    case false:
+                      $(cell).css({ 'background-color': 'red' });
+                      break;
+                    case true:
+                      $(cell).css({ 'background-color': 'white' });
+                  }*/
       $(board).append(cell);
 
     });
   });
 }
+
+
 
 function fireGrid(board, numbers, letters) {
   numbersArray = numbers.map(Number);
@@ -319,7 +331,6 @@ function fireGrid(board, numbers, letters) {
         var row = (x + 1).toString();
         return row;
       });
-      console.log($(cell).attr('class'));
 
       $(board).append(cell);
 
@@ -338,7 +349,6 @@ function drawBoard(mode) {
     var height = $(window).width() / 2;
     var cell = height / 11;
     var string = 'repeat(11, ' + cell + 'px)';
-    console.log(string);
     return string;
   });
   $(board).css('grid-template-rows', function() {
