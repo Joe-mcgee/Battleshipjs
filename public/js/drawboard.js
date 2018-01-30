@@ -288,6 +288,9 @@ function displayGrid(board, numbers, letters) {
           if (coord == $(cell).attr('class')) {
             $(cell).css({'background-color': 'white'});
           }
+          if (coord == 'X' + $(cell).attr('class')) {
+            $(cell).css({'background-color': 'red'});
+        }
         })
       })
 

@@ -96,8 +96,8 @@ function destroyShip(shot, target) {
     let coords = target[ship];
     coords.forEach((item, i) => {
       if (item === shot) {
-        console.log(item)
-        target[ship][i] = 'X';
+        console.log(item);
+        target[ship][i] = 'X' + item;
       }
     });
   }
