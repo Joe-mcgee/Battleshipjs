@@ -1,3 +1,3 @@
-let tempdb = {};
+var tempdb = {};
 
-module.exports.tempdb = tempdb;
+module.exports.tempdb = tempdb

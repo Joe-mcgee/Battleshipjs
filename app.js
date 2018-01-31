@@ -100,6 +100,8 @@ function evaluator(shooter, shotAt) {
   let lastShot = getPlayerCoords(shooter)['targets'].slice(-1)[0];
   let targetFleet = getPlayerCoords(shotAt);
   let hit = false;
+  let win = false;
+  let winCount = 0;
   if (typeof lastShot === 'undefined') {
     return 'good luck';
   } else {
@@ -118,16 +120,21 @@ function evaluator(shooter, shotAt) {
           }
           if (!killConfirm.test(coord)) {
             dystroyed = false;
+            winCount += 1;
           }
         }
-        console.log(hit)
-        if (dystroyed == true) {
+        console.log(hit);
+        if (dystroyed === true) {
           output += ', ' + name + ' has sunk a ' + ship;
         }
       }
     }
-    if (hit == false) {
+    if (hit === false) {
       output += lastShot + ': MISS';
+    }
+    if (winCount === targetFleet.lenght - 1) {
+      win = true;
+      output = 'Congratz, ' + name + ' you achieved Victory!';
     }
   }
   return output;
