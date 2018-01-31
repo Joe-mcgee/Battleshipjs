@@ -92,6 +92,51 @@ function checkCoords(shot, target) {
   return false;
 }
 
+// params (1,0) or (0,1)
+function evaluator(shooter, shotAt) {
+  let id = getGameId(db.tempdb);
+  let name = Object.keys(db.tempdb[id])[shooter];
+  let output = name + ' shoots at ';
+  let lastShot = getPlayerCoords(shooter)['targets'].slice(-1)[0];
+  let targetFleet = getPlayerCoords(shotAt);
+  let hit = false;
+  if (typeof lastShot === 'undefined') {
+    return 'good luck';
+  } else {
+    for (ship in targetFleet) {
+      let coords = targetFleet[ship];
+      console.log(coords);
+      if (ship !== 'targets') {
+        let dystroyed = true;
+        let killConfirm = new RegExp('^X');
+        for (let i = 0; i < coords.length; i++) {
+          let coord = coords[i];
+          if (lastShot === coord) {
+            let style = coord.replace(/^X/, '');
+            output += style + ': HIT';
+            hit = true;
+          }
+          if (!killConfirm.test(coord)) {
+            dystroyed = false;
+          }
+        }
+        console.log(hit)
+        if (dystroyed == true) {
+          output += ', ' + name + ' has sunk a ' + ship;
+        }
+      }
+    }
+    if (hit == false) {
+      output += lastShot + ': MISS';
+    }
+  }
+  return output;
+}
+
+
+
+
+
 function destroyShip(shot, target) {
   for (ship in target) {
     let coords = target[ship];
@@ -172,9 +217,12 @@ app.get('/newp2', (req, res) => {
 
 // pass screen between player two and player one
 app.get('/inter1', (req, res) => {
+  let logItem = evaluator(1, 0);
+  console.log(logItem);
   let templateVars = {
     player: 'player1',
-    url: '/player1turn'
+    url: '/player1turn',
+    logItem: logItem
   };
   res.render('inter', templateVars);
 });
@@ -235,9 +283,11 @@ app.post('/inter2', (req, res) => {
 });
 
 app.get('/inter2', (req, res) => {
+  let logItem = evaluator(0, 1);
   let templateVars = {
     player: 'player 2',
-    url: '/player2turn'
+    url: '/player2turn',
+    logItem: logItem
   };
   res.render('inter2', templateVars);
 });
