@@ -134,7 +134,7 @@ function evaluator(shooter, shotAt) {
     if (hit === false) {
       output[0] = name + ' shoots at ' + lastShot + ': MISS';
     }
-    if (winCount === targetFleet.lenght - 1) {
+    if (winCount === 0) {
       win = true;
       output.push(' Congratz, ' + name + ' you achieved Victory!')
     }
@@ -231,6 +231,7 @@ app.get('/newp2', (req, res) => {
 
 // pass screen between player two and player one
 app.get('/inter1', (req, res) => {
+  let victoryRegex = new RegExp('^ Congratz')
   let logItem = evaluator(1, 0);
   console.log(logItem);
   let templateVars = {
@@ -238,6 +239,10 @@ app.get('/inter1', (req, res) => {
     url: '/player1turn',
     logItem: logItem
   };
+  if (victoryRegex.test(logItem[logItem.length - 1])) {
+    res.redirect('/victory2')
+    return
+  }
   res.render('inter', templateVars);
 });
 
@@ -297,12 +302,17 @@ app.post('/inter2', (req, res) => {
 });
 
 app.get('/inter2', (req, res) => {
+let victoryRegex = new RegExp ('^ Congratz')
   let logItem = evaluator(0, 1);
   let templateVars = {
     player: 'player 2',
     url: '/player2turn',
     logItem: logItem
   };
+  if (victoryRegex.test(logItem[logItem.length - 1])) {
+    res.redirect('/victory1');
+    return
+  }
   res.render('inter2', templateVars);
 });
 
@@ -323,6 +333,20 @@ app.get('/player2turn', (req, res) => {
   };
   res.render('player2turn', templateVars);
 });
+
+app.get('/victory1', (req, res) => {
+  let id = getGameId(db.tempdb);
+  let name = Object.keys(db.tempdb[id])[0];
+  let templateVars = {name: name}
+  res.render('victory', templateVars);
+})
+
+app.get('/victory2', (req, res) => {
+let id = getGameId(db.tempdb);
+  let name = Object.keys(db.tempdb[id])[1];
+  let templateVars = {name: name}
+  res.render('victory', templateVars);
+})
 
 app.listen(8080);
 
