@@ -130,7 +130,7 @@ function evaluator(shooter, shotAt) {
       }
     }
     if (hit === false) {
-      output += lastShot + ': MISS';
+      output = name + ' shoots at ' + lastShot + ': MISS';
     }
     if (winCount === targetFleet.lenght - 1) {
       win = true;

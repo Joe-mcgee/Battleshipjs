@@ -331,7 +331,7 @@ function fireGrid(board, numbers, letters) {
       previousTargets.forEach((target) => {
         if (target == $(cell).attr('class')) {
           $(cell).attr('disabled', true);
-          $(cell).css({'display': 'none'})
+          $(cell).css({'visibility': 'hidden'})
         }
         if (target == 'X' + $(cell).attr('class')) {
           cell = $('<div/>', {
