@@ -3,17 +3,18 @@
   <head>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script type="text/javascript" src='js/drawboard.js'></script>
+<script type="text/javascript" src='js/ship-list.js'></script>
 
 <script>
-  let CarrierCoords = '<%= ships['Carrier'] %>'.split(',');
-  let BattleshipCoords = '<%= ships['Battleship'] %>'.split(',');
-  let CruiserCoords = '<%= ships['Cruiser'] %>'.split(',');
-  let SubmarineCoords = '<%= ships['Submarine'] %>'.split(',');
-  let DestroyerCoords = '<%= ships['Destroyer'] %>'.split(',');
+  let Carrier = '<%= ships['Carrier'] %>'.split(',');
+  let Battleship = '<%= ships['Battleship'] %>'.split(',');
+  let Cruiser = '<%= ships['Cruiser'] %>'.split(',');
+  let Submarine = '<%= ships['Submarine'] %>'.split(',');
+  let Destroyer = '<%= ships['Destroyer'] %>'.split(',');
   let previousTargets = '<%= ships['targets'] %>'.split(',');
   let otherShots = '<%= otherShots %>'.split(',');
   console.log(otherShots)
-  let fleet = [CarrierCoords, BattleshipCoords, CruiserCoords, SubmarineCoords, DestroyerCoords]
+  let fleet = [Carrier, Battleship, Cruiser, Submarine, Destroyer]
 </script>
 <script type="text/javascript" src='js/battle.js'></script>
 
@@ -26,6 +27,14 @@
     </div>
     <%- include('partials/board') %>
 
-
+    <section class='ships'>
+      <ul>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+      </ul>
+    </section>
   </body>
 </html>

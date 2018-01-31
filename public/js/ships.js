@@ -37,12 +37,12 @@ function allocShips() {
     'id': 'instructions'
   });
   let submitButton = $('<input/>', {
-  'type': 'submit',
-  'form': 'boardForm',
-  'value': 'submit'
-});
-$(submitButton).attr('form', 'boardForm');
-$(submitButton).append(document.createTextNode('confirm placement'));
+    'type': 'submit',
+    'form': 'boardForm',
+    'value': 'submit'
+  });
+  $(submitButton).attr('form', 'boardForm');
+  $(submitButton).append(document.createTextNode('confirm placement'));
   $(instructions).append(submitButton);
   $(instructions).css({ 'grid-row': '2', 'grid-column': '1/2', 'height': '100%', 'width': '100%', 'display': 'flex', 'justify-content': 'center', 'align-items': 'center' });
   $(shipYard).append(instructions);
@@ -51,7 +51,7 @@ $(submitButton).append(document.createTextNode('confirm placement'));
   let yard = $('<div/>', {
     'id': 'yard'
   });
-  $(yard).css({ 'grid-row': '1', 'display': 'grid'});
+  $(yard).css({ 'grid-row': '1', 'display': 'grid' });
   $(yard).css('grid-template-columns', function() {
     var length1 = celldim() * 6;
     var length2 = celldim() * 5;
@@ -80,7 +80,7 @@ $(submitButton).append(document.createTextNode('confirm placement'));
 
 
 
-    $(image).css({'display': 'grid' });
+    $(image).css({ 'display': 'grid' });
     $(image).css('grid-template-columns', function() {
       var string = 'repeat(' + ship.size + ', 1fr)';
       return string;
@@ -90,7 +90,7 @@ $(submitButton).append(document.createTextNode('confirm placement'));
       let databox = $('<div/>', {
         'class': 'xy'
       });
-      $(databox).css({ 'height': 'calc(100% - 2px)', 'width': 'calc(100% - 2px)', 'border': '1px solid black', 'background-color': 'white', 'display': 'flex', 'justify-content': 'center', 'align-items':'center' });
+      $(databox).css({ 'height': 'calc(100% - 2px)', 'width': 'calc(100% - 2px)', 'border': '1px solid black', 'background-color': 'white', 'display': 'flex', 'justify-content': 'center', 'align-items': 'center' });
       $(databox).css('grid-column', function() {
         return i + 1;
       });
@@ -120,7 +120,7 @@ $(submitButton).append(document.createTextNode('confirm placement'));
       let oldHeight = $(image).css('height');
       let oldWidth = $(image).css('width');
 
-      $(image).css({'grid-template-rows': oldCol, 'grid-template-columns': oldRow, 'height': oldWidth, 'width': oldHeight });
+      $(image).css({ 'grid-template-rows': oldCol, 'grid-template-columns': oldRow, 'height': oldWidth, 'width': oldHeight });
 
 
 

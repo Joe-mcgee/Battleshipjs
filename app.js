@@ -96,7 +96,7 @@ function checkCoords(shot, target) {
 function evaluator(shooter, shotAt) {
   let id = getGameId(db.tempdb);
   let name = Object.keys(db.tempdb[id])[shooter];
-  let output = name + ' shoots at ';
+  let output = [name + ' shoots at '];
   let lastShot = getPlayerCoords(shooter)['targets'].slice(-1)[0];
   let targetFleet = getPlayerCoords(shotAt);
   let hit = false;
@@ -115,7 +115,7 @@ function evaluator(shooter, shotAt) {
           let coord = coords[i];
           if (lastShot === coord) {
             let style = coord.replace(/^X/, '');
-            output += style + ': HIT';
+            output[0] += style + ': HIT';
             hit = true;
           }
           if (!killConfirm.test(coord)) {
@@ -125,23 +125,29 @@ function evaluator(shooter, shotAt) {
         }
         console.log(hit);
         if (dystroyed === true) {
-          output += ', ' + name + ' has sunk a ' + ship;
+          if (!output.includes(name + ' has sunk a ' + ship)) {
+          output.push( ' ' + name + ' has sunk a ' + ship)
+        }
         }
       }
     }
     if (hit === false) {
-      output = name + ' shoots at ' + lastShot + ': MISS';
+      output[0] = name + ' shoots at ' + lastShot + ': MISS';
     }
     if (winCount === targetFleet.lenght - 1) {
       win = true;
-      output = 'Congratz, ' + name + ' you achieved Victory!';
+      output.push(' Congratz, ' + name + ' you achieved Victory!')
     }
   }
+  fullLog(output)
   return output;
 }
 
-
-
+function fullLog(logItem) {
+  let id = getGameId(db.tempdb);
+  db.logdb[id].push(logItem);
+  console.log(db.logdb)
+}
 
 
 function destroyShip(shot, target) {
@@ -176,6 +182,7 @@ app.get('/new', (req, res) => {
 //posts options and init to server
 app.post('/new', (req, res) => {
   let id = makeGameId(db.tempdb);
+  db.logdb[id] = [];
   db.tempdb[id] = {};
   let templateVars = {
     player: 'player 1',

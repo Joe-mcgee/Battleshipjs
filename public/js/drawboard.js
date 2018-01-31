@@ -337,10 +337,10 @@ function fireGrid(board, numbers, letters) {
           cell = $('<div/>', {
             'class': letters[y - 1] + '-' + x
           });
-          $(cell).css({'background': 'red', 'width': '100%', 'height': '100%'})
+          $(cell).css({'background': 'red', 'width': '100%', 'height': '100%'});
         }
 
-      })
+      });
 
 
       $(board).append(cell);
