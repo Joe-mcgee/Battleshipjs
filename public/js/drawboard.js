@@ -349,6 +349,10 @@ function fireGrid(board, numbers, letters) {
   });
 }
 
+
+
+
+
 function drawBoard(mode) {
   var board = $('<div/>', {
     'class': 'board'
@@ -370,7 +374,7 @@ function drawBoard(mode) {
   let form;
   if (mode === 'fire') {
     form = $('<form/>', {
-      'action': '/inter2',
+      'action': formUrl,
       'method': 'POST',
       'id': 'fire'
     });

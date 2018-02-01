@@ -1,4 +1,3 @@
-
 const fleet = [{ 'Carrier': 5 },
   { 'Battleship': 4 },
   { 'Submarine': 3 },
@@ -8,7 +7,6 @@ const fleet = [{ 'Carrier': 5 },
 
 const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
 const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-
 
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
 function getRandomIntInclusive(one, two) {
@@ -20,7 +18,7 @@ function getRandomIntInclusive(one, two) {
 function orientation() {
   let options = ['H', 'V'];
   let roll = getRandomIntInclusive(0, 1);
-  return options[roll]
+  return options[roll];
 }
 
 function baseCoord(orient, length) {
@@ -41,7 +39,6 @@ function baseCoord(orient, length) {
     col = getRandomIntInclusive(1, x);
     row = getRandomIntInclusive(1, y);
     break;
-
   }
   return col + '-' + row;
 }
@@ -49,7 +46,6 @@ function baseCoord(orient, length) {
 function coordArray(base, length, orient) {
   let rowreg = new RegExp('(10$|[0-9]$)');
   let output = [];
-
   let col = base[0];
   let row = rowreg.exec(base)[0];
   output.push(letters[col - 1] + '-' + row);
@@ -87,45 +83,34 @@ function genAiFleet(fleet) {
   });
   output['AI'] = ships;
   return output;
-
 }
 
-let potentialFleet = genAiFleet(fleet)
-
-
-
-
-
-
 function checkAiFleet(AiFleet) {
-
   let ships = Object.values(AiFleet)[0];
   let coords = Object.values(ships);
-  let merged = [].concat.apply([], coords)
+  let merged = [].concat.apply([], coords);
 
- //https://stackoverflow.com/questions/840781/get-all-non-unique-values-i-e-duplicate-more-than-one-occurrence-in-an-array
+  //https://stackoverflow.com/questions/840781/get-all-non-unique-values-i-e-duplicate-more-than-one-occurrence-in-an-array
   const count = merged =>
     merged.reduce((a, b) =>
       Object.assign(a, {[b]: (a[b] || 0) + 1}), {});
 
   const duplicates = dict =>
-    Object.keys(dict).filter((a) => dict[a] > 1)
+    Object.keys(dict).filter((a) => dict[a] > 1);
 
-  let isTrue = duplicates(count(merged))
-  let pass = (isTrue.length > 0) ?  false : true;
-  return pass
-
+  let isTrue = duplicates(count(merged));
+  let pass = !((isTrue.length > 0));
+  return pass;
 }
 
 function validAiFleet(fleet) {
   let potentialFleet = genAiFleet(fleet);
   let pass = checkAiFleet(potentialFleet);
-  console.log(pass)
-  let passed = pass ? potentialFleet: validAiFleet(fleet);
+  let passed = pass ? potentialFleet : validAiFleet(fleet);
   return passed;
 }
 
-console.log(validAiFleet(fleet))
 
-module.exports.genAiFleet = genAiFleet;
+
+module.exports.validAiFleet = validAiFleet;
 

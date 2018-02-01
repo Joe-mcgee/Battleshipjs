@@ -219,8 +219,10 @@ app.post('/addPlayerone', (req, res) => {
   db.tempdb[id][player1.name] = player1.ships;
   db.tempdb[id][player1.name]['targets'] = [];
   if (singleCheck.test(id)) {
-    db.tempdb[id]
-    Object.assign(db.tempdb[id], aiSetup.genAiFleet(fleet));
+    let aifleet = aiSetup.validAiFleet(fleet);
+    aifleet['AI']['targets'] = [];
+    console.log(aifleet)
+    Object.assign(db.tempdb[id], aifleet);
     console.log(db.tempdb)
     res.redirect('interc');
   }
@@ -254,9 +256,28 @@ app.get('/newp2', (req, res) => {
 app.get('/interc', (req, res) => {
   let logItem = evaluator(0, 1)
   let templateVars = {
-    logItem: logItem
+    logItem: logItem,
+    player: 'player',
+    url: '/player1turn'
+  };
+  res.render('inter', templateVars)
+});
+
+
+app.post('/interc', (req, res) => {
+  let player1Coords = getPlayerCoords(0);
+  let player2Coords = getPlayerCoords(1);
+  let shot = req.body.coord;
+
+  let isHit = checkCoords(shot, player1Coords);
+  if (isHit) {
+    player2Coords['targets'].push('X' + shot);
+    destroyShip(shot, player1Coords);
+
+  } else {
+    player2Coords['targets'].push(shot);
   }
-  res.render('inter')
+  res.redirect('interc')
 })
 
 
@@ -304,13 +325,21 @@ app.post('/player1turn', (req, res) => {
 
 app.get('/player1turn', (req, res) => {
   //grab player ones, ship coordinates
+  let singleCheck = new RegExp('S$')
   let id = getGameId(db.tempdb);
   let name = Object.keys(db.tempdb[id])[0];
   let player1Coords = db.tempdb[id][name];
   let player2PrevShots = getPlayerCoords(1)['targets']
+  let url;
+  if (singleCheck.test(id)) {
+    url = '/interc';
+  } else {
+    url = '/inter2';
+  }
+
   let templateVars = {
     player: 'player 1',
-    url: '/inter2',
+    url: url,
     ships: player1Coords,
     otherShots: player2PrevShots
   };

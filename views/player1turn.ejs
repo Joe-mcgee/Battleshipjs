@@ -7,6 +7,8 @@
 <script type="text/javascript" src='js/ship-list.js'></script>
 
 <script>
+  let formUrl = '<%= url %>'
+  console.log(formUrl)
   let Carrier = '<%= ships['Carrier'] %>'.split(',');
   let Battleship = '<%= ships['Battleship'] %>'.split(',');
   let Cruiser = '<%= ships['Cruiser'] %>'.split(',');
