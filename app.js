@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const db = require('./db.js');
+const aiSetup = require('./ai-setup.js');
 /*const MongoClient = require('mongodb').MongoClient;
 const url = 'mongodb://localhost:2017/battleshipDb';
 const dbName = 'battleshipDb'
@@ -13,6 +14,13 @@ MongoClient.connect(url, (err, client) => {
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 
+
+const fleet = [{ 'Carrier': 5 },
+  { 'Battleship': 4 },
+  { 'Submarine': 3 },
+  { 'Cruiser': 3 },
+  { 'Destroyer': 2 }
+];
 
 function makeGameId(tempdb, type) {
   let output = 0;
@@ -188,7 +196,6 @@ app.get('/new', (req, res) => {
 
 //posts options and init to server
 app.post('/new', (req, res) => {
-  console.log(req.body)
   let type = req.body.gameType[0]
   let id = makeGameId(db.tempdb, type);
   db.logdb[id] = [];
@@ -211,9 +218,10 @@ app.post('/addPlayerone', (req, res) => {
   let player1 = new Player(name, coords);
   db.tempdb[id][player1.name] = player1.ships;
   db.tempdb[id][player1.name]['targets'] = [];
-  console.log(db.tempdb)
   if (singleCheck.test(id)) {
-    // Generate AI player?
+    db.tempdb[id]
+    Object.assign(db.tempdb[id], aiSetup.genAiFleet(fleet));
+    console.log(db.tempdb)
     res.redirect('interc');
   }
   res.redirect('newp2');
@@ -244,6 +252,10 @@ app.get('/newp2', (req, res) => {
 
 
 app.get('/interc', (req, res) => {
+  let logItem = evaluator(0, 1)
+  let templateVars = {
+    logItem: logItem
+  }
   res.render('inter')
 })
 
