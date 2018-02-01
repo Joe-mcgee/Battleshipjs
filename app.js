@@ -178,6 +178,14 @@ function destroyShip(shot, target) {
   }
 }
 
+function randomShot() {
+  const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
+  const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  let letter = letters[Math.floor(Math.random()*letters.length)];
+  let number = numbers[Math.floor(Math.random()*numbers.length)];
+  return letter + '-' + number;
+
+}
 //use ejs templating engine
 app.set('view engine', 'ejs');
 //home route, starts game and inits options
@@ -225,6 +233,7 @@ app.post('/addPlayerone', (req, res) => {
     Object.assign(db.tempdb[id], aifleet);
     console.log(db.tempdb)
     res.redirect('interc');
+    return
   }
   res.redirect('newp2');
 
@@ -254,36 +263,49 @@ app.get('/newp2', (req, res) => {
 
 
 app.get('/interc', (req, res) => {
-  let logItem = evaluator(0, 1)
+  let logItem = evaluator(0, 1) + evaluator(1, 0);
   let templateVars = {
     logItem: logItem,
     player: 'player',
     url: '/player1turn'
   };
-  res.render('inter', templateVars)
+  res.render('inter', templateVars);
 });
 
 
 app.post('/interc', (req, res) => {
   let player1Coords = getPlayerCoords(0);
-  let player2Coords = getPlayerCoords(1);
+  let aiCoords= getPlayerCoords(1);
   let shot = req.body.coord;
 
-  let isHit = checkCoords(shot, player1Coords);
-  if (isHit) {
-    player2Coords['targets'].push('X' + shot);
-    destroyShip(shot, player1Coords);
+  let isAiHit = checkCoords(shot, aiCoords);
+  if (isAiHit) {
+    player1Coords['targets'].push('X' + shot);
+    destroyShip(shot, aiCoords);
 
   } else {
-    player2Coords['targets'].push(shot);
+    player1Coords['targets'].push(shot);
   }
-  res.redirect('interc')
-})
+
+  let aiShot = randomShot();
+
+  let isHit = checkCoords(aiShot, player1Coords);
+
+  if (isHit) {
+    aiCoords['targets'].push('X' + shot);
+    destroyShip(aishot, aiCoords);
+
+  } else {
+    aiCoords['targets'].push(aiShot);
+  }
+
+  res.redirect('interc');
+});
 
 
 // pass screen between player two and player one
 app.get('/inter1', (req, res) => {
-  let victoryRegex = new RegExp('^ Congratz')
+  let victoryRegex = new RegExp('^ Congratz');
   let logItem = evaluator(1, 0);
   console.log(logItem);
   let templateVars = {
