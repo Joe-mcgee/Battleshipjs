@@ -47,12 +47,11 @@ function baseCoord(orient, length) {
 }
 
 function coordArray(base, length, orient) {
-  let rowreg = new RegExp('(10$|[0-9]$)')
+  let rowreg = new RegExp('(10$|[0-9]$)');
   let output = [];
 
   let col = base[0];
-  let row = rowreg.exec(base)[0]
-  console.log(row)
+  let row = rowreg.exec(base)[0];
   output.push(letters[col - 1] + '-' + row);
   let iter = 1;
   switch (orient) {
@@ -93,18 +92,40 @@ function genAiFleet(fleet) {
 
 let potentialFleet = genAiFleet(fleet)
 
+
+
+
+
+
 function checkAiFleet(AiFleet) {
+
   let ships = Object.values(AiFleet)[0];
-  console.log(ships)
+  let coords = Object.values(ships);
+  let merged = [].concat.apply([], coords)
+
+ //https://stackoverflow.com/questions/840781/get-all-non-unique-values-i-e-duplicate-more-than-one-occurrence-in-an-array
+  const count = merged =>
+    merged.reduce((a, b) =>
+      Object.assign(a, {[b]: (a[b] || 0) + 1}), {});
+
+  const duplicates = dict =>
+    Object.keys(dict).filter((a) => dict[a] > 1)
+
+  let isTrue = duplicates(count(merged))
+  let pass = (isTrue.length > 0) ?  false : true;
+  return pass
 
 }
 
-checkAiFleet(potentialFleet)
-
-
-function validAiFleet(AiFleet) {
-
+function validAiFleet(fleet) {
+  let potentialFleet = genAiFleet(fleet);
+  let pass = checkAiFleet(potentialFleet);
+  console.log(pass)
+  let passed = pass ? potentialFleet: validAiFleet(fleet);
+  return passed;
 }
+
+console.log(validAiFleet(fleet))
 
 module.exports.genAiFleet = genAiFleet;
 
