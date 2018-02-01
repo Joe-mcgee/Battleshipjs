@@ -14,10 +14,18 @@ app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
-function makeGameId(tempdb) {
+function makeGameId(tempdb, type) {
   let output = 0;
   for (id in db.tempdb) {
     output += 1;
+  }
+  switch (type) {
+  case 'Single':
+    output += 'S';
+    break;
+  case 'Two Player':
+    output += 'T';
+    break;
   }
   return output;
 }
@@ -149,7 +157,6 @@ function fullLog(logItem) {
   console.log(db.logdb)
 }
 
-
 function destroyShip(shot, target) {
   for (ship in target) {
     let coords = target[ship];
@@ -181,7 +188,9 @@ app.get('/new', (req, res) => {
 
 //posts options and init to server
 app.post('/new', (req, res) => {
-  let id = makeGameId(db.tempdb);
+  console.log(req.body)
+  let type = req.body.gameType[0]
+  let id = makeGameId(db.tempdb, type);
   db.logdb[id] = [];
   db.tempdb[id] = {};
   let templateVars = {
@@ -193,6 +202,7 @@ app.post('/new', (req, res) => {
 
 // posts player ones ships to server
 app.post('/addPlayerone', (req, res) => {
+  let singleCheck = new RegExp('S$')
   let id = getGameId(db.tempdb);
   let name = req.body.name;
   let form = req.body;
@@ -202,6 +212,10 @@ app.post('/addPlayerone', (req, res) => {
   db.tempdb[id][player1.name] = player1.ships;
   db.tempdb[id][player1.name]['targets'] = [];
   console.log(db.tempdb)
+  if (singleCheck.test(id)) {
+    // Generate AI player?
+    res.redirect('interc');
+  }
   res.redirect('newp2');
 
 });
@@ -227,6 +241,11 @@ app.get('/newp2', (req, res) => {
   };
   res.render('new', templateVars);
 });
+
+
+app.get('/interc', (req, res) => {
+  res.render('inter')
+})
 
 
 // pass screen between player two and player one

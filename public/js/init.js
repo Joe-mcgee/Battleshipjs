@@ -1,14 +1,15 @@
 $(document).ready(function() {
   let newGame = $('<form/>', {
     'id': 'newGame',
-    'action':'/new',
-    'method': 'post'
+    'action': '/new',
+    'method': 'POST'
   });
   $(newGame).css({'display': 'grid', 'grid-template-rows': '1fr 1fr'});
 
-  let newButton = $('<input/>', {
+  let newButton = $('<button/>', {
     'id': 'new',
-    'type': 'submit'
+    'type': 'submit',
+    'form': 'newGame'
   });
 
   $(newButton).css({ 'grid-row': '1', 'height': '100%', 'width': '100%', 'display': 'flex', 'align-items': 'center', 'justify-content': 'center' });
@@ -22,7 +23,8 @@ $(document).ready(function() {
   $(options).css({ 'grid-row': '2', 'display': 'grid', 'grid-template-rows': '1fr 1fr' });
 
   let players = $('<select/>', {
-    'id': 'players'
+    'id': 'players',
+    'name': 'gameType[]'
   });
   let single = $('<option/>', {
     'value': 'Single'
