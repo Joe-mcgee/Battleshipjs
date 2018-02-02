@@ -191,7 +191,8 @@ function randomShot(previousShots) {
 app.set('view engine', 'ejs');
 //home route, starts game and inits options
 app.get('/', (req, res) => {
-  res.render('home');
+  let templateVars = {ishome: true}
+  res.render('home', templateVars);
 });
 
 // renders add ships for player 1
@@ -219,11 +220,19 @@ app.post('/new', (req, res) => {
 // posts player ones ships to server
 app.post('/addPlayerone', (req, res) => {
   let singleCheck = new RegExp('S$')
-  let id = getGameId(db.tempdb);
   let name = req.body.name;
   let form = req.body;
   let coords = filterName(form);
+  let check = Object.keys(coords);
+  if (check.length !== 17) {
+    res.redirect('/new');
+    return
+  }
+  if (name == '') {
+    res.redirect('/new');
+  }
 
+  let id = getGameId(db.tempdb);
   let player1 = new Player(name, coords);
   db.tempdb[id][player1.name] = player1.ships;
   db.tempdb[id][player1.name]['targets'] = [];
@@ -240,11 +249,20 @@ app.post('/addPlayerone', (req, res) => {
 
 // posts player twos ships to server, initializes the pass screen
 app.post('/addPlayerTwo', (req, res) => {
-  let id = getGameId(db.tempdb);
   let name = req.body.name;
   let form = req.body;
   let coords = filterName(form);
+   let check = Object.keys(coords);
+  if (check.length !== 17) {
+    res.redirect('/new');
+    return;
+  }
+  if (name === '') {
+    res.redirect('/new');
+  }
 
+
+  let id = getGameId(db.tempdb);
   let player2 = new Player(name, coords);
   db.tempdb[id][player2.name] = player2.ships;
   db.tempdb[id][player2.name]['targets'] = [];
