@@ -2,14 +2,18 @@
 <html>
   <head>
     <link rel='stylesheet' type='text/css' href='css/main.css'>
+    <link rel='stylesheet' type='text/css' href='css/leaderboard.css'>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script type='text/javascript' src='js/init.js'></script>
   </head>
   <body>
     <%- include('partials/nav') %>
-    <%- include('partials/board') %>
-
-
+    <% if (typeof isHome == 'undefined') {%>
+      <%- include('partials/board') %>
+    <% } else { %>
+    <p> test 2</p>
+    <%- include('partials/board', {leaders: leaders})%>
+    <% } %>
 
 
   </body>

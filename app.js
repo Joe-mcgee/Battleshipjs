@@ -128,7 +128,6 @@ function evaluator(shooter, shotAt) {
         let killConfirm = new RegExp('^X');
         for (let i = 0; i < coords.length; i++) {
           let coord = coords[i];
-          console.log(lastShot, coord)
           if (lastShot == coord) {
             let style = coord.replace(/^X/, '');
             output[0] += style + ': HIT';
@@ -164,7 +163,6 @@ function fullLog(logItem) {
 }
 
 function destroyShip(shot, target) {
-  console.log(2, shot)
   for (ship in target) {
     let coords = target[ship];
     if (ship !== 'targets') {
@@ -187,11 +185,38 @@ function randomShot(previousShots) {
   return shot
 
 }
+
+function sortLeaders(winners) {
+  output = {};
+  winners.forEach((winner) => {
+    if (output[winner]) {
+      output[winner] += 1;
+    } else {
+      output[winner] = 1;
+    }
+  })
+  return output
+}
+
+function findLeaders(db) {
+  let output = [];
+  for (id in db) {
+    output.push(db[id]['win'])
+    }
+    return output;
+  }
+
+
 //use ejs templating engine
 app.set('view engine', 'ejs');
 //home route, starts game and inits options
 app.get('/', (req, res) => {
-  let templateVars = {ishome: true}
+  let winners = findLeaders(db.tempdb);
+  console.log(winners)
+  let leaders = sortLeaders(winners)
+  console.log(leaders)
+  let templateVars = {isHome: true,
+                      leaders: leaders}
   res.render('home', templateVars);
 });
 
@@ -452,12 +477,16 @@ app.get('/victory1', (req, res) => {
   let id = getGameId(db.tempdb);
   let name = Object.keys(db.tempdb[id])[0];
   let templateVars = {name: name}
+  db.tempdb[id]['win'] = name;
+  console.log(db.tempdb)
   res.render('victory', templateVars);
 })
 
 app.get('/victory2', (req, res) => {
 let id = getGameId(db.tempdb);
   let name = Object.keys(db.tempdb[id])[1];
+  db.tempdb[id]['win'] = name;
+  console.log(db.tempdb)
   let templateVars = {name: name}
   res.render('victory', templateVars);
 })

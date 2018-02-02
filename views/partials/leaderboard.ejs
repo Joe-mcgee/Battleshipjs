@@ -1,9 +1,13 @@
-<aside class='leaderboard'>
-<h3>LeaderBoard</h3>
-  <% for (let i = 0; i < 10; i++ ) { %>
-  <div class='row'>
-    <li class='name'></li>
-    <li class='wins'></li>
-  </div>
+<table class='leaderboard'>
+<tr>
+  <th>Player</th>
+  <th>Win Number</th>
+</tr>
+  <% for (leader in leaders) { %>
+
+  <tr>
+    <td class='player'><%= leader %></td>
+    <td class='wins'><%= leaders[leader] %></td>
+  </tr>
   <% } %>
-</aside>
+</table>
