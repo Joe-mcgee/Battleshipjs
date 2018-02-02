@@ -123,13 +123,13 @@ function evaluator(shooter, shotAt) {
   } else {
     for (ship in targetFleet) {
       let coords = targetFleet[ship];
-      console.log(coords);
       if (ship !== 'targets') {
         let dystroyed = true;
         let killConfirm = new RegExp('^X');
         for (let i = 0; i < coords.length; i++) {
           let coord = coords[i];
-          if (lastShot === coord) {
+          console.log(lastShot, coord)
+          if (lastShot == coord) {
             let style = coord.replace(/^X/, '');
             output[0] += style + ': HIT';
             hit = true;
@@ -139,8 +139,7 @@ function evaluator(shooter, shotAt) {
             winCount += 1;
           }
         }
-        console.log(hit);
-        if (dystroyed === true) {
+            if (dystroyed === true) {
           if (!output.includes(name + ' has sunk a ' + ship)) {
           output.push( ' ' + name + ' has sunk a ' + ship)
         }
@@ -162,10 +161,10 @@ function evaluator(shooter, shotAt) {
 function fullLog(logItem) {
   let id = getGameId(db.tempdb);
   db.logdb[id].push(logItem);
-  console.log(db.logdb)
 }
 
 function destroyShip(shot, target) {
+  console.log(2, shot)
   for (ship in target) {
     let coords = target[ship];
     if (ship !== 'targets') {
@@ -178,12 +177,14 @@ function destroyShip(shot, target) {
   }
 }
 
-function randomShot() {
+function randomShot(previousShots) {
   const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
   const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   let letter = letters[Math.floor(Math.random()*letters.length)];
   let number = numbers[Math.floor(Math.random()*numbers.length)];
-  return letter + '-' + number;
+  let shot = letter + '-' + number
+  let valid = previousShots.includes(shot) ? randomShot(previousShots): true;
+  return shot
 
 }
 //use ejs templating engine
@@ -229,9 +230,7 @@ app.post('/addPlayerone', (req, res) => {
   if (singleCheck.test(id)) {
     let aifleet = aiSetup.validAiFleet(fleet);
     aifleet['AI']['targets'] = [];
-    console.log(aifleet)
     Object.assign(db.tempdb[id], aifleet);
-    console.log(db.tempdb)
     res.redirect('interc');
     return
   }
@@ -263,7 +262,9 @@ app.get('/newp2', (req, res) => {
 
 
 app.get('/interc', (req, res) => {
-  let logItem = evaluator(0, 1) + evaluator(1, 0);
+  let playerShot = evaluator(0, 1)
+  let aiShot = evaluator(1, 0)
+  let logItem = playerShot + ', ' + aiShot
   let templateVars = {
     logItem: logItem,
     player: 'player',
@@ -287,13 +288,13 @@ app.post('/interc', (req, res) => {
     player1Coords['targets'].push(shot);
   }
 
-  let aiShot = randomShot();
+  let aiShot = randomShot(aiCoords['targets']);
 
   let isHit = checkCoords(aiShot, player1Coords);
 
   if (isHit) {
-    aiCoords['targets'].push('X' + shot);
-    destroyShip(aishot, aiCoords);
+    aiCoords['targets'].push('X' + aiShot);
+    destroyShip(aiShot, player1Coords);
 
   } else {
     aiCoords['targets'].push(aiShot);
@@ -307,7 +308,6 @@ app.post('/interc', (req, res) => {
 app.get('/inter1', (req, res) => {
   let victoryRegex = new RegExp('^ Congratz');
   let logItem = evaluator(1, 0);
-  console.log(logItem);
   let templateVars = {
     player: 'player1',
     url: '/player1turn',
