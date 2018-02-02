@@ -262,6 +262,8 @@ app.get('/newp2', (req, res) => {
 
 
 app.get('/interc', (req, res) => {
+  let playerVictoryRegex = new RegExp('Victory!,', 'g');
+  let aiVictoryRegex = new RegExp('Victory!$', 'g')
   let playerShot = evaluator(0, 1)
   let aiShot = evaluator(1, 0)
   let logItem = playerShot + ', ' + aiShot
@@ -270,8 +272,20 @@ app.get('/interc', (req, res) => {
     player: 'player',
     url: '/player1turn'
   };
+  if (playerVictoryRegex.test(logItem)) {
+    res.redirect('/victory1')
+    return
+  }
+
+  if (aiVictoryRegex.test(logItem)) {
+    rest.redirect('/victory2');
+    return;
+  }
+
+
   res.render('inter', templateVars);
 });
+
 
 
 app.post('/interc', (req, res) => {
