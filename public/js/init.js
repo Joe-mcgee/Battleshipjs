@@ -1,11 +1,12 @@
 $(document).ready(function() {
+  // form for new game
   let newGame = $('<form/>', {
     'id': 'newGame',
     'action': '/new',
     'method': 'POST'
   });
   $(newGame).css({'display': 'grid', 'grid-template-rows': '1fr 1fr'});
-
+  //submit button
   let newButton = $('<button/>', {
     'id': 'new',
     'type': 'submit',
@@ -45,9 +46,29 @@ $(document).ready(function() {
   $(newGame).append(options)
 
   $(newButton).css({ 'grid-row': '1', 'height': '100%', 'width': '100%', 'display': 'flex', 'align-items': 'center', 'justify-content': 'center' });
-  newGame.append(newButton);
+   newGame.append(newButton);
 
-  $('.main-box').append(newGame);
+
+let randomDiv = $('<div/>', {
+  'class': 'random'
+})
+
+$(randomDiv).css({'grid-column':'1', 'grid-row': '2'})
+
+
+  let randomButton = $('<input/>', {
+    'type': 'checkbox',
+    'name': 'random',
+    'value': 'randomStart'
+  });
+  $(randomButton).css({'height': '80%', 'width': '50%'})
+
+
+$(randomDiv).append('<p>Random Start: </p>')
+$(randomDiv).append(randomButton);
+$(options).append(randomDiv);
+
+    $('.main-box').append(newGame);
 
 });
 
