@@ -382,8 +382,12 @@ app.get('/interc', (req, res) => {
 app.post('/interc', (req, res) => {
   let player1Coords = getPlayerCoords(0);
   let aiCoords = getPlayerCoords(1);
-  let shot = req.body.coord;
 
+  let shot = req.body.coord;
+  if (typeof shot === 'undefined') {
+    res.redirect('/player1turn')
+    return
+  }
   let isAiHit = checkCoords(shot, aiCoords);
   if (isAiHit) {
     player1Coords['targets'].push('X' + shot);
@@ -429,7 +433,10 @@ app.post('/inter1', (req, res) => {
   let player1Coords = getPlayerCoords(0);
   let player2Coords = getPlayerCoords(1);
   let shot = req.body.coord;
-
+  if (typeof shot === 'undefined') {
+    res.redirect('/player2turn');
+    return;
+  }
   let isHit = checkCoords(shot, player1Coords);
   if (isHit) {
     player2Coords['targets'].push('X' + shot);
@@ -477,6 +484,11 @@ app.post('/inter2', (req, res) => {
   let player1Coords = getPlayerCoords(0);
   let player2Coords = getPlayerCoords(1);
   let shot = req.body.coord;
+  if (typeof shot === 'undefined') {
+    res.redirect('/player1turn');
+    return;
+  }
+
   let isHit = checkCoords(shot, player2Coords);
   if (isHit) {
     player1Coords['targets'].push('X' + shot);
