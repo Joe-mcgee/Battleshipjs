@@ -184,9 +184,9 @@ function randomShot(previousShots) {
   const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   let letter = letters[Math.floor(Math.random() * letters.length)];
   let number = numbers[Math.floor(Math.random() * numbers.length)];
-  let shot = letter + '-' + number
-  let valid = previousShots.includes(shot) ? randomShot(previousShots) : true;
-  return shot
+  let shot = letter + '-' + number;
+  let passed = !previousShots.includes(shot) && !previousShots.includes('X' + shot) ? shot : randomShot(previousShots);
+  return passed;
 }
 
 function sortLeaders(winners) {
