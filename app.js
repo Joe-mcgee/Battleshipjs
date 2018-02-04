@@ -9,6 +9,8 @@ const aiSetup = require('./ai-setup.js');
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 
+//use ejs templating engine
+app.set('view engine', 'ejs');
 // fleet object for AI setup
 const fleet = [{ 'Carrier': 5 },
   { 'Battleship': 4 },
@@ -231,8 +233,13 @@ function findLeaders(db) {
 }
 
 
-//use ejs templating engine
-app.set('view engine', 'ejs');
+
+/*************************
+*
+*  ROUTES for BattleshipJS
+*
+**************************/
+
 //home route, starts game and inits options
 app.get('/', (req, res) => {
   let winners = findLeaders(db.tempdb);
