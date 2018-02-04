@@ -42,9 +42,9 @@ This version currently supports
 - generates a random and unique shot.
 
 #### Relevant Sources
-[Jquery UI](http://api.jqueryui.com/draggable/)
-[Jquery UI](https://jqueryui.com/droppable/)
-[Jquery UI](https://stackoverflow.com/questions/20695744/getting-jquery-draggable-to-snap-to-specific-grid)
+[Jquery UI- draggable](http://api.jqueryui.com/draggable/)
+[Jquery UI - droppable](https://jqueryui.com/droppable/)
+[Jquery UI - snap to gird](https://stackoverflow.com/questions/20695744/getting-jquery-draggable-to-snap-to-specific-grid)
 
 ##### Known Bugs and Issues
 - Dynamic cell size causes rounding error during ship rotation, results in evenly numbered ships to become attached to board x+1 or y+1 units from their origin
