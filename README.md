@@ -27,6 +27,7 @@ opening a browser window at localhost:8080 will display the game
 This version currently supports
 - play vs a computer
 - play vs a friend on same computer
+- random starting player
 
 1. Begin by selecting the game type and whether you'd like a random person to start
 2. Place your ships on the board and add your alias
@@ -42,3 +43,15 @@ http://api.jqueryui.com/draggable/
 https://jqueryui.com/droppable/
 https://stackoverflow.com/questions/20695744/getting-jquery-draggable-to-snap-to-specific-grid
 
+##### Known Bugs and Issues
+- Dynamic cell size causes rounding error during ship rotation, results in evenly numbered ships to become attached to board x+1 or y+1 units from their origin
+- radio buttons slightly overlow on larger window sizes, causing the display grid to slightly overlow from its parent div
+- boat validation and fire validation has no error messages, just redirects.
+
+##### Features in next version
+- a Stronger Ai than current random shot model.
+- gameplay on two different computers
+- better css for leaderboard, submit and fire buttons
+- customizations for board size, and number of ships
+- legacy gameplay mode which allows more shots based on ships remaining
+- supermove mode that gives diffent fire options based on ships alive.
