@@ -38,6 +38,9 @@ This version currently supports
 
 4. relish victory once all your opponents ships are destroyed.
 
+### Current AI
+- generates a random and unique shot.
+
 #### Relevant Sources
 http://api.jqueryui.com/draggable/
 https://jqueryui.com/droppable/
