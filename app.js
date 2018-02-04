@@ -349,7 +349,7 @@ app.post('/addPlayerTwo', (req, res) => {
   }
   if (name === '') {
     res.redirect('/newp2');
-    return
+    return;
   }
 
   // handlers for player2 info to be appended to DB
