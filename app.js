@@ -1,20 +1,15 @@
+// Reqs
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const db = require('./db.js');
 const aiSetup = require('./ai-setup.js');
-/*const MongoClient = require('mongodb').MongoClient;
-const url = 'mongodb://localhost:2017/battleshipDb';
-const dbName = 'battleshipDb'
-MongoClient.connect(url, (err, client) => {
 
-})
-*/
-// set static directory
+// Uses
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
+// fleet object for AI setup
 const fleet = [{ 'Carrier': 5 },
   { 'Battleship': 4 },
   { 'Submarine': 3 },
@@ -22,18 +17,31 @@ const fleet = [{ 'Carrier': 5 },
   { 'Destroyer': 2 }
 ];
 
+/*
+*
+* Helper Functions for Database transformations
+*
+*/
+
+
+/*Inputs: Database, (single/ multiplayer)
+*         Boolean for if the player wants a random player to start
+*
+* Outputs: a string with the game number and letters for options
+*          designed to be caught by regex tests
+*/
 function makeGameId(tempdb, type, random) {
   let output = 0;
   for (id in db.tempdb) {
     output += 1;
   }
   switch (type) {
-    case 'Single':
-      output += 'S';
-      break;
-    case 'Two Player':
-      output += 'T';
-      break;
+  case 'Single':
+    output += 'S';
+    break;
+  case 'Two Player':
+    output += 'T';
+    break;
   }
   if (typeof random !== 'undefined') {
     output += 'R';
@@ -41,10 +49,13 @@ function makeGameId(tempdb, type, random) {
   return output;
 }
 
+
+/*References the current db object to be transformed (the last one made)*/
 function getGameId(tempdb) {
   return Object.keys(db.tempdb)[Object.keys(db.tempdb).length - 1];
 }
 
+/*Player Constuctor: takes a name and ship coordinates to produce a player object*/
 function Player(name, coords) {
   this.name = name;
   this.ships = {
@@ -54,6 +65,7 @@ function Player(name, coords) {
     Cruiser: [],
     Destroyer: []
   };
+  // assigns coordinates to appropriate ships
   for (coord in coords) {
     let cruiser = RegExp("^Cruiser");
     if (cruiser.test(coords[coord])) {
@@ -78,6 +90,7 @@ function Player(name, coords) {
   }
 }
 
+// Removes name from a form to isolate the ship coordinates
 function filterName(form) {
   let result = form;
   for (let key in result) {
@@ -103,13 +116,19 @@ function checkCoords(shot, target) {
     if (ship !== 'targets') {
       for (let i = 0; i < coords.length; i++) {
         let coord = coords[i];
-        if (shot == coord) {
+        if (shot === coord) {
           return true;
         }
       }
     }
   }
   return false;
+}
+
+//appends a log entry to the logItem db for a full game log
+function fullLog(logItem) {
+  let id = getGameId(db.tempdb);
+  db.logdb[id].push(logItem);
 }
 
 // params (1,0) or (0,1)
@@ -122,6 +141,8 @@ function evaluator(shooter, shotAt) {
   let hit = false;
   let win = false;
   let winCount = 0;
+
+  // handler statement for first turn
   if (typeof lastShot === 'undefined') {
     return 'good luck';
   } else {
@@ -129,10 +150,11 @@ function evaluator(shooter, shotAt) {
       let coords = targetFleet[ship];
       if (ship !== 'targets') {
         let dystroyed = true;
+        // coordinates succussfully hit by another player a prepended with X
         let killConfirm = new RegExp('^X');
         for (let i = 0; i < coords.length; i++) {
           let coord = coords[i];
-          if (lastShot == coord) {
+          if (lastShot === coord) {
             let style = coord.replace(/^X/, '');
             output[0] += style + ': HIT';
             hit = true;
@@ -144,7 +166,7 @@ function evaluator(shooter, shotAt) {
         }
         if (dystroyed === true) {
           if (!output.includes(name + ' has sunk a ' + ship)) {
-            output.push(' ' + name + ' has sunk a ' + ship)
+            output.push(' ' + name + ' has sunk a ' + ship);
           }
         }
       }
@@ -152,20 +174,17 @@ function evaluator(shooter, shotAt) {
     if (hit === false) {
       output[0] = name + ' shoots at ' + lastShot + ': MISS';
     }
+    // a win is declared once the evaluator function fails to add any iterations to win count
     if (winCount === 0) {
       win = true;
-      output.push(' Congratz, ' + name + ' you achieved Victory!')
+      output.push(' Congratz, ' + name + ' you achieved Victory!');
     }
   }
-  fullLog(output)
+  fullLog(output);
   return output;
 }
 
-function fullLog(logItem) {
-  let id = getGameId(db.tempdb);
-  db.logdb[id].push(logItem);
-}
-
+//takes a coordinate and a list of targets and appends X to matches
 function destroyShip(shot, target) {
   for (ship in target) {
     let coords = target[ship];
@@ -179,6 +198,7 @@ function destroyShip(shot, target) {
   }
 }
 
+// Generates a unique shot for the AI to shoot
 function randomShot(previousShots) {
   const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
   const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -189,6 +209,7 @@ function randomShot(previousShots) {
   return passed;
 }
 
+// finds the username with the largest amount of wins against AI
 function sortLeaders(winners) {
   output = {};
   winners.forEach((winner) => {
@@ -197,14 +218,14 @@ function sortLeaders(winners) {
     } else {
       output[winner] = 1;
     }
-  })
-  return output
+  });
+  return output;
 }
-
+//
 function findLeaders(db) {
   let output = [];
   for (id in db) {
-    output.push(db[id]['win'])
+    output.push(db[id]['win']);
   }
   return output;
 }
@@ -215,13 +236,13 @@ app.set('view engine', 'ejs');
 //home route, starts game and inits options
 app.get('/', (req, res) => {
   let winners = findLeaders(db.tempdb);
-  console.log()
-  let leaders = sortLeaders(winners)
-  console.log(leaders)
+  console.log();
+  let leaders = sortLeaders(winners);
+  console.log(leaders);
   let templateVars = {
     isHome: true,
     leaders: leaders
-  }
+  };
   res.render('home', templateVars);
 });
 
@@ -236,23 +257,20 @@ app.get('/new', (req, res) => {
 
 //posts options and init to server
 app.post('/new', (req, res) => {
-  let type = req.body.gameType[0]
-  let isRandom = req.body.random
+  let type = req.body.gameType[0];
+  let isRandom = req.body.random;
   let id = makeGameId(db.tempdb, type, isRandom);
   let player;
   let url;
 
   db.logdb[id] = [];
   db.tempdb[id] = {};
-  /*  let templateVars = {
-      player: 'player 1',
-      url: '/addPlayerone'
-    };*/
   res.redirect('/new');
 });
 
 // posts player ones ships to server
 app.post('/addPlayerone', (req, res) => {
+  // regex to determine turn flow based on user options
   let singleCheck = new RegExp('S', 'g');
   let randomCheck = new RegExp('R', 'g');
   let name = req.body.name;
@@ -261,22 +279,26 @@ app.post('/addPlayerone', (req, res) => {
   let check = Object.keys(coords);
   if (check.length !== 17) {
     res.redirect('/new');
-    return
+    return;
   }
-  if (name == '') {
+  if (name === '') {
     res.redirect('/new');
-    return
+    return;
   }
 
+  // handlers for player information to be structured in db
   let id = getGameId(db.tempdb);
   let player1 = new Player(name, coords);
   db.tempdb[id][player1.name] = player1.ships;
   db.tempdb[id][player1.name]['targets'] = [];
+
+  // handlers for AI information to be structured into DB
   if (singleCheck.test(id)) {
     let aifleet = aiSetup.validAiFleet(fleet);
     aifleet['AI']['targets'] = [];
     Object.assign(db.tempdb[id], aifleet);
 
+    // allows the AI to make the first move 50% of the time if random start is selected
     if (randomCheck.test(id)) {
       let dice = Math.random();
       let aiCoords = getPlayerCoords(1);
@@ -297,7 +319,7 @@ app.post('/addPlayerone', (req, res) => {
           aiCoords['targets'].push(aiShot);
         }
         res.redirect('interc');
-        return
+        return;
       }
     }
 
@@ -310,7 +332,7 @@ app.post('/addPlayerone', (req, res) => {
 
 // posts player twos ships to server, initializes the pass screen
 app.post('/addPlayerTwo', (req, res) => {
-  let randomCheck = new RegExp('R', 'g')
+  let randomCheck = new RegExp('R', 'g');
   let name = req.body.name;
   let form = req.body;
   let coords = filterName(form);
@@ -323,19 +345,20 @@ app.post('/addPlayerTwo', (req, res) => {
     res.redirect('/new');
   }
 
-
+  // handlers for player2 info to be appended to DB
   let id = getGameId(db.tempdb);
   let player2 = new Player(name, coords);
   db.tempdb[id][player2.name] = player2.ships;
   db.tempdb[id][player2.name]['targets'] = [];
 
+  // allows player2 to start 50% of time
   if (randomCheck.test(id)) {
     let dice = Math.random();
     if (dice < 0.5) {
-      res.redirect('inter1')
+      res.redirect('inter1');
       return;
     } else {
-      res.redirect('inter2')
+      res.redirect('inter2');
       return;
     }
   }
@@ -355,38 +378,35 @@ app.get('/newp2', (req, res) => {
 app.get('/interc', (req, res) => {
   let playerVictoryRegex = new RegExp('Victory!,', 'g');
   let aiVictoryRegex = new RegExp('Victory!$', 'g');
-  let playerShot = evaluator(0, 1)
-  let aiShot = evaluator(1, 0)
-  let logItem = playerShot + ', ' + aiShot
+  let playerShot = evaluator(0, 1);
+  let aiShot = evaluator(1, 0);
+  let logItem = playerShot + ', ' + aiShot;
   let templateVars = {
     logItem: logItem,
     player: 'player',
     url: '/player1turn'
   };
-  if (playerVictoryRegex.test(logItem)) {
-    res.redirect('/victory1')
-    return
-  }
 
+  if (playerVictoryRegex.test(logItem)) {
+    res.redirect('/victory1');
+    return;
+  }
   if (aiVictoryRegex.test(logItem)) {
     rest.redirect('/victory2');
     return;
   }
-
-
   res.render('inter', templateVars);
 });
 
-
-
+// intermission screen for people vsing AI
 app.post('/interc', (req, res) => {
   let player1Coords = getPlayerCoords(0);
   let aiCoords = getPlayerCoords(1);
 
   let shot = req.body.coord;
   if (typeof shot === 'undefined') {
-    res.redirect('/player1turn')
-    return
+    res.redirect('/player1turn');
+    return;
   }
   let isAiHit = checkCoords(shot, aiCoords);
   if (isAiHit) {
@@ -412,7 +432,6 @@ app.post('/interc', (req, res) => {
   res.redirect('interc');
 });
 
-
 // pass screen between player two and player one
 app.get('/inter1', (req, res) => {
   let victoryRegex = new RegExp('^ Congratz');
@@ -423,12 +442,13 @@ app.get('/inter1', (req, res) => {
     logItem: logItem
   };
   if (victoryRegex.test(logItem[logItem.length - 1])) {
-    res.redirect('/victory2')
-    return
+    res.redirect('/victory2');
+    return;
   }
   res.render('inter', templateVars);
 });
 
+// handles turn from player 1 to 2
 app.post('/inter1', (req, res) => {
   let player1Coords = getPlayerCoords(0);
   let player2Coords = getPlayerCoords(1);
@@ -459,11 +479,11 @@ app.post('/player1turn', (req, res) => {
 
 app.get('/player1turn', (req, res) => {
   //grab player ones, ship coordinates
-  let singleCheck = new RegExp('S')
+  let singleCheck = new RegExp('S');
   let id = getGameId(db.tempdb);
   let name = Object.keys(db.tempdb[id])[0];
   let player1Coords = db.tempdb[id][name];
-  let player2PrevShots = getPlayerCoords(1)['targets']
+  let player2PrevShots = getPlayerCoords(1)['targets'];
   let url;
   if (singleCheck.test(id)) {
     url = '/interc';
@@ -501,7 +521,7 @@ app.post('/inter2', (req, res) => {
 });
 
 app.get('/inter2', (req, res) => {
-  let victoryRegex = new RegExp('^ Congratz')
+  let victoryRegex = new RegExp('^ Congratz');
   let logItem = evaluator(0, 1);
   let templateVars = {
     player: 'player 2',
@@ -510,7 +530,7 @@ app.get('/inter2', (req, res) => {
   };
   if (victoryRegex.test(logItem[logItem.length - 1])) {
     res.redirect('/victory1');
-    return
+    return;
   }
   res.render('inter2', templateVars);
 });
@@ -523,7 +543,7 @@ app.get('/player2turn', (req, res) => {
   let id = getGameId(db.tempdb);
   let name = Object.keys(db.tempdb[id])[1];
   let player2Coords = db.tempdb[id][name];
-  let player1PrevShots = getPlayerCoords(0)['targets']
+  let player1PrevShots = getPlayerCoords(0)['targets'];
   let templateVars = {
     player: 'player 2',
     url: '/inter1',
@@ -533,23 +553,25 @@ app.get('/player2turn', (req, res) => {
   res.render('player2turn', templateVars);
 });
 
+// handles victory screen in player 1 wins
 app.get('/victory1', (req, res) => {
   let id = getGameId(db.tempdb);
   let name = Object.keys(db.tempdb[id])[0];
-  let templateVars = { name: name }
+  let templateVars = { name: name };
   db.tempdb[id]['win'] = name;
-  console.log(db.tempdb)
+  console.log(db.tempdb);
   res.render('victory', templateVars);
-})
+});
 
+// handles victory if player 2 wins
 app.get('/victory2', (req, res) => {
   let id = getGameId(db.tempdb);
   let name = Object.keys(db.tempdb[id])[1];
   db.tempdb[id]['win'] = name;
-  console.log(db.tempdb)
-  let templateVars = { name: name }
+  console.log(db.tempdb);
+  let templateVars = { name: name };
   res.render('victory', templateVars);
-})
+});
 
 app.listen(8080);
 
