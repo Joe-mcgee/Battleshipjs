@@ -339,7 +339,7 @@ function fireGrid(board, numbers, letters) {
         'class': letters[y - 1] + '-' + x,
         'value': letters[y - 1] + '-' + x
       });
-      $(cell).css({ 'height': '100%', 'width': '100%', 'display': 'flex', 'justify-content': 'center', 'align-items': 'center', 'border-bottom': '1px solid black', 'border-right': '1px solid black' });
+      $(cell).css({ 'height': '99%', 'width': '99%', 'display': 'flex', 'justify-content': 'center', 'align-items': 'center', 'border-bottom': '1px solid black', 'border-right': '1px solid black' });
       $(cell).css('grid-column', function() {
         var column = (y + 1).toString();
         return column;
