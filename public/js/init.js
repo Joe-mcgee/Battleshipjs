@@ -69,7 +69,7 @@ $(document).ready(function() {
     'value': 'randomStart'
   });
   $(randomButton).css({ 'height': '80%', 'width': '50%' });
-  $(randomDiv).append('<p>Random Start: </p>');
+  $(randomDiv).append('<span>Random Start: <span>');
   $(randomDiv).append(randomButton);
   $(options).append(randomDiv);
   $('.main-box').append(newGame);

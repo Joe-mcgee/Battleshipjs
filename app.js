@@ -334,7 +334,6 @@ app.post('/addPlayerone', (req, res) => {
     return;
   }
   res.redirect('newp2');
-
 });
 
 // posts player twos ships to server, initializes the pass screen
@@ -345,11 +344,12 @@ app.post('/addPlayerTwo', (req, res) => {
   let coords = filterName(form);
   let check = Object.keys(coords);
   if (check.length !== 17) {
-    res.redirect('/new');
+    res.redirect('/newp2');
     return;
   }
   if (name === '') {
-    res.redirect('/new');
+    res.redirect('/newp2');
+    return
   }
 
   // handlers for player2 info to be appended to DB
