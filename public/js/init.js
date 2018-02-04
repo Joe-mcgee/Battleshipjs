@@ -42,10 +42,10 @@ $(document).ready(function() {
     'value': 'Two Player'
   });
   two.append(document.createTextNode('Two Player Local'));
-  let remote = $('<option/>', {
+  let remote = $('<option disabled/>', {
     'value': 'Remote'
   });
-  remote.append(document.createTextNode('Two Player Remote'));
+  remote.append(document.createTextNode('*Coming Soon* Two Player Remote'));
   $(players).append(single);
   $(players).append(two);
   $(players).append(remote);
