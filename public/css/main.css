@@ -7,7 +7,6 @@ body nav {
   height: 69px;
   background: #848482;
   border-bottom: 2px solid black;
-
 }
 
 nav li {
@@ -18,6 +17,7 @@ nav li {
   list-style: none;
   color: #D3D3D3;
 }
+
 nav li a {
   background-color: #D3D3D3;
   font-size: 33px;
@@ -28,8 +28,6 @@ nav li a {
   width: 100%;
   align-items: center;
   justify-content: center;
-
-
 }
 
 .main-box {
@@ -38,5 +36,4 @@ nav li a {
   height: 600px;
   background-color: teal;
   grid-template-columns: 1fr 1fr;
-
 }

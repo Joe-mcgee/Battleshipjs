@@ -1,3 +1,9 @@
+/********************************************************************
+ *
+ * JS for handling to display of the ships in the ship placement phase
+ *
+ ********************************************************************/
+
 // functions for ships
 // defines length of cell
 function celldim() {
@@ -6,7 +12,7 @@ function celldim() {
   return cell;
 }
 
-
+// ship constructor
 function Ship(type, size) {
   this.type = type;
   this.size = size;
@@ -23,8 +29,6 @@ var destroyer = new Ship('Destroyer', 2);
 
 let fleet = [carrier, battleship, cruiser, submarine, destroyer];
 
-
-
 function allocShips() {
   //right side of screen
   let shipYard = $('<div/>', {
@@ -36,11 +40,13 @@ function allocShips() {
   let instructions = $('<div/>', {
     'id': 'instructions'
   });
+
   let submitButton = $('<input/>', {
     'type': 'submit',
     'form': 'boardForm',
     'value': 'submit'
   });
+
   $(submitButton).attr('form', 'boardForm');
   $(submitButton).append(document.createTextNode('confirm placement'));
   $(instructions).append(submitButton);
@@ -62,10 +68,14 @@ function allocShips() {
   $(yard).css('grid-row-gap', function() {
     return celldim();
   });
+
   $(yard).css('grid-template-rows', function() {
     var string = 'repeat(' + Math.ceil(fleet.length / 2) + ', ' + celldim() + 'px)';
     return string;
   });
+
+  // iter array is for the precision initial positioning of the ships in the shipyard
+  // needed to align Jquery UI draggable grid with the display grid
   let iter = [1, 1, 2, 2, 3];
   let j = 0;
   for (ship of fleet) {
@@ -77,8 +87,6 @@ function allocShips() {
     $(image).draggable({
       grid: [celldim(), celldim()]
     });
-
-
 
     $(image).css({ 'display': 'grid' });
     $(image).css('grid-template-columns', function() {
@@ -100,33 +108,21 @@ function allocShips() {
     $(image).css('grid-row', function() {
       return iter[j];
     });
-    /*$(image).css('grid-column', function() {
-      if ((j + 1) % 2 === 0) {
-        return '2';
-      } else {
-        return '1';
-      }
-    });*/
+
     $(image).css('width', function() {
       return celldim() * ship.size;
     });
     $(image).css('height', function() {
       return celldim();
     });
+    // handling the orientation of the ships onclick
     $(image).click(function() {
-
       let oldRow = $(image).css('grid-template-rows');
       let oldCol = $(image).css('grid-template-columns');
       let oldHeight = $(image).css('height');
       let oldWidth = $(image).css('width');
 
       $(image).css({ 'grid-template-rows': oldCol, 'grid-template-columns': oldRow, 'height': oldWidth, 'width': oldHeight });
-
-
-
-      /*$(image).draggable({
-      grid: [celldim(), celldim()]
-    });*/
     });
 
     ship['image'] = image;
@@ -134,9 +130,5 @@ function allocShips() {
     $(shipYard).append(yard);
     j++;
   }
-
   return shipYard;
 }
-
-
-

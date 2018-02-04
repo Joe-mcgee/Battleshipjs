@@ -1,6 +1,8 @@
-
-
-
+/***************************************************
+*
+* JS for handling the display of Log of game actions
+*
+***************************************************/
 
 function displayLog(item) {
   let box = $('<div/>', {
@@ -11,9 +13,7 @@ function displayLog(item) {
   $(box).append(document.createTextNode(item));
 
   return box;
-
 }
-
 
 $(document).ready(function() {
   let $item = displayLog(logItem);

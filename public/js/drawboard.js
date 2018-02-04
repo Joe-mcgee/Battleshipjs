@@ -1,6 +1,14 @@
+/***************************************************
+ *
+ * JS for handling the display of relevant gameboards
+ *
+ ***************************************************/
+
 const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
 const numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
 
+// coordinates for each cell are handled in the divs class
+// this function takes a div and returns its coordinates in an array
 function divcoords(div) {
   let coords = $(div).attr('class').match(/([A-Z]-10|[A-Z]-[1-9])/)[0];
   let x = coords.split('-')[0].toLowerCase().charCodeAt(0) - 96;
@@ -8,6 +16,8 @@ function divcoords(div) {
   return [x, y];
 }
 
+// the X axis is handled with letters in BS
+// this function will take to numerical values and convert the X to a letter
 function coordsToDiv(coords) {
   let x = coords[0];
   let y = coords[1];
@@ -17,25 +27,27 @@ function coordsToDiv(coords) {
   return div;
 }
 
+// handles the drawing of the x axis
 function xaxis(board, letters) {
   letters.forEach(function(letter, i) {
     var letterdiv = $('<div/>', {
       'class': letter
     });
+
     var letterNode = document.createTextNode(letter);
     $(letterdiv).append(letterNode);
+
     $(letterdiv).css({ 'height': '100%', 'width': '100%', 'display': 'flex', 'justify-content': 'center', 'align-items': 'center', 'grid-row': '1', 'border-bottom': '1px solid black', 'border-right': '1px solid black' });
     $(letterdiv).css('grid-column', function() {
       var column = (i + 2).toString();
       return column;
     });
-    $(board).append(letterdiv);
 
+    $(board).append(letterdiv);
   });
 }
 
 function yaxis(board, numbers) {
-
   numbers.forEach(function(number, i) {
     var numberdiv = $('<div/>', {
       'class': number
@@ -52,6 +64,7 @@ function yaxis(board, numbers) {
   });
 }
 
+// Fills the top left most grid square
 function origin(board) {
   var origin = $('<div/>', {
     'class': 'origin'
@@ -60,16 +73,23 @@ function origin(board) {
   $(board).append(origin);
 }
 
+// checks for loaded scripts
 // https://stackoverflow.com/questions/9659265/check-if-javascript-script-exists-on-page
 function isScriptLoaded(url) {
-  let scripts = document.getElementsByTagName('script')
+  let scripts = document.getElementsByTagName('script');
   for (let i = scripts.length; i--;) {
-    if (scripts[i].src === url) return true
+    if (scripts[i].src === url) { return true; }
   }
-  return false
+  return false;
 }
 
-//display types
+/***********************************************************************
+ *
+ * JS for each Board State; Ship placement, Firing grid, and status grid.
+ *
+ ***********************************************************************/
+
+// handles grid that allows ships to be placed on it
 function drawGridWithDrop(board, numbers, letters) {
   numbersArray = numbers.map(Number);
   numbersArray.forEach(function(y) {
@@ -81,11 +101,12 @@ function drawGridWithDrop(board, numbers, letters) {
       });
 
       if (isScriptLoaded("https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js")) {
+        // code that handles events for when a particular ship is dropped on board
         $(cell).droppable({
 
           drop: function(event, ui) {
 
-            if (!ui.draggable.hasClass('ui-draggable')) return;
+            if (!ui.draggable.hasClass('ui-draggable')) { return; }
             /*$(this).append("<div id='marked'>Test</div>")*/
             let baseMarker;
             let coords;
@@ -96,7 +117,7 @@ function drawGridWithDrop(board, numbers, letters) {
             let location;
             if (ui.draggable.is('#Carrier')) {
               baseMarker = $(this);
-              console.log(baseMarker)
+              console.log(baseMarker);
               coords = divcoords(baseMarker);
               let carrier = document.getElementById('Carrier');
               height = carrier.clientHeight;
@@ -104,7 +125,7 @@ function drawGridWithDrop(board, numbers, letters) {
 
               x = coords[0];
               y = coords[1];
-              console.log(y)
+              console.log(y);
               location = [];
               if (height > width) {
                 location = [
@@ -233,6 +254,7 @@ function drawGridWithDrop(board, numbers, letters) {
             }
 
           },
+          // handles the change in ship placement in the event a player changes their mind on ship location
           over: function(event, ui) {
             if (ui.draggable.is('#Carrier')) {
               $('.board').find('.Carrier-mark').remove();
@@ -262,7 +284,7 @@ function drawGridWithDrop(board, numbers, letters) {
     });
   });
 }
-
+// handles displaying the grid for the current players' ships
 function displayGrid(board, numbers, letters) {
   numbersArray = numbers.map(Number);
   numbersArray.forEach(function(y) {
@@ -281,32 +303,31 @@ function displayGrid(board, numbers, letters) {
       $(cell).css('grid-row', function() {
         var row = (x + 1).toString();
         return row;
-      })
-
+      });
+      // if a player has a hit ship, it will display a red background
       fleet.forEach((ship) => {
         ship.forEach((coord) => {
           if (coord === $(cell).attr('class')) {
-            $(cell).css({'background-color': 'white'});
+            $(cell).css({ 'background-color': 'white' });
           }
           if (coord === 'X' + $(cell).attr('class')) {
-            $(cell).css({'background-color': 'red'});
-            previousTargets = previousTargets.filter(item => item !== coord)
-        }
+            $(cell).css({ 'background-color': 'red' });
+            previousTargets = previousTargets.filter(item => item !== coord);
+          }
         });
       });
-
+      // coordinates the the opponent has attacked will display as black
       otherShots.forEach((target) => {
         if (target === $(cell).attr('class')) {
-          $(cell).css({'background-color': 'black'})
+          $(cell).css({ 'background-color': 'black' });
         }
       });
-
       $(board).append(cell);
-
     });
   });
 }
 
+// displays the grid a player will use to choose where to fire
 function fireGrid(board, numbers, letters) {
   numbersArray = numbers.map(Number);
   numbersArray.forEach(function(y) {
@@ -328,31 +349,26 @@ function fireGrid(board, numbers, letters) {
         var row = (x + 1).toString();
         return row;
       });
+      // if a player has shot at a target before, it will become disabled
       previousTargets.forEach((target) => {
         if (target == $(cell).attr('class')) {
           $(cell).attr('disabled', true);
-          $(cell).css({'visibility': 'hidden'})
+          $(cell).css({ 'visibility': 'hidden' });
         }
+        // hits are disabled and red
         if (target == 'X' + $(cell).attr('class')) {
           cell = $('<div/>', {
             'class': letters[y - 1] + '-' + x
           });
-          $(cell).css({'background': 'red', 'width': '100%', 'height': '100%'});
+          $(cell).css({ 'background': 'red', 'width': '100%', 'height': '100%' });
         }
-
       });
-
-
       $(board).append(cell);
-
     });
   });
 }
 
-
-
-
-
+// function handles fiting the board components together based on the desired mode
 function drawBoard(mode) {
   var board = $('<div/>', {
     'class': 'board'
@@ -370,7 +386,7 @@ function drawBoard(mode) {
     var string = 'repeat(11, ' + cell + 'px)';
     return string;
   });
-
+  // fire grids need a form to post the desired coordinate to attack
   let form;
   if (mode === 'fire') {
     form = $('<form/>', {
@@ -394,22 +410,16 @@ function drawBoard(mode) {
   xaxis(board, letters);
   yaxis(board, numbers);
   switch (mode) {
-    case 'init':
-      drawGridWithDrop(board, numbers, letters);
-      break;
-    case 'display':
-      displayGrid(board, numbers, letters);
-      break;
-    case 'fire':
-    case 'fire2':
-      fireGrid(board, numbers, letters);
-      return form;
+  case 'init':
+    drawGridWithDrop(board, numbers, letters);
+    break;
+  case 'display':
+    displayGrid(board, numbers, letters);
+    break;
+  case 'fire':
+  case 'fire2':
+    fireGrid(board, numbers, letters);
+    return form;
   }
-
   return board;
 }
-
-
-
-
-
