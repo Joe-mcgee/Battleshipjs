@@ -1,6 +1,12 @@
+/*
+*
+* JS for in memory DB
+*
+*/
+
 var tempdb = {
  '0S':
-   { 'Captian Joe':
+   { 'Captain Joe':
       { Carrier: [Array],
         Battleship: [Array],
         Submarine: [Array],

@@ -5,9 +5,8 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script type="text/javascript" src='js/drawboard.js'></script>
 <script type="text/javascript" src='js/ship-list.js'></script>
-
+<!-- lack of AJAX knowledge led to db data insertion via ejs tags -->
 <script>
-
   let Carrier = '<%= ships['Carrier'] %>'.split(',');
   let Battleship = '<%= ships['Battleship'] %>'.split(',');
   let Cruiser = '<%= ships['Cruiser'] %>'.split(',');
@@ -26,6 +25,5 @@
         <button type='submit' value='fire' form='fire'>Fire!</button>
     </div>
     <%- include('partials/board') %>
-
   </body>
 </html>

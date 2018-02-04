@@ -1,3 +1,9 @@
+/**************************************************
+*
+* JS for handling to intialization of an AI's ships
+*
+**************************************************/
+
 const fleet = [{ 'Carrier': 5 },
   { 'Battleship': 4 },
   { 'Submarine': 3 },
@@ -15,12 +21,14 @@ function getRandomIntInclusive(one, two) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+// generates a random orientation for a ship
 function orientation() {
   let options = ['H', 'V'];
   let roll = getRandomIntInclusive(0, 1);
   return options[roll];
 }
 
+// denotes a  random starting position for a ship
 function baseCoord(orient, length) {
   let x;
   let y;
@@ -43,6 +51,7 @@ function baseCoord(orient, length) {
   return col + '-' + row;
 }
 
+// generates a list of coords for a ship based on length and orientation
 function coordArray(base, length, orient) {
   let rowreg = new RegExp('(10$|[0-9]$)');
   let output = [];
@@ -70,6 +79,7 @@ function coordArray(base, length, orient) {
   return output;
 }
 
+// function that generates the conditions for ships based on the fleet object
 function genAiFleet(fleet) {
   let output = {};
   let ships = {};
@@ -85,6 +95,7 @@ function genAiFleet(fleet) {
   return output;
 }
 
+// validation function to check for overlapping ships
 function checkAiFleet(AiFleet) {
   let ships = Object.values(AiFleet)[0];
   let coords = Object.values(ships);
@@ -103,6 +114,7 @@ function checkAiFleet(AiFleet) {
   return pass;
 }
 
+// recursive function that generates fleets until a valid one is composed
 function validAiFleet(fleet) {
   let potentialFleet = genAiFleet(fleet);
   let pass = checkAiFleet(potentialFleet);
